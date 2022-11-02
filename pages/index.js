@@ -1,13 +1,14 @@
 import getConfig from 'next/config';
-import { Button } from 'primereact/button';
-import { Chart } from 'primereact/chart';
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
-import { Menu } from 'primereact/menu';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { ProductService } from '../demo/service/ProductService';
-import { LayoutContext } from '../layout/context/layoutcontext';
+import {Button} from 'primereact/button';
+import {Chart} from 'primereact/chart';
+import {Column} from 'primereact/column';
+import {DataTable} from 'primereact/datatable';
+import {Menu} from 'primereact/menu';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import {ProductService} from '../demo/service/ProductService';
+import {LayoutContext} from '../layout/context/layoutcontext';
 import Link from 'next/link';
+
 const lineData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
@@ -363,22 +364,7 @@ const Dashboard = () => {
                         </li>
                     </ul>
                 </div>
-                <div
-                    className="px-4 py-5 shadow-2 flex flex-column md:flex-row md:align-items-center justify-content-between mb-3"
-                    style={{ borderRadius: '1rem', background: 'linear-gradient(0deg, rgba(0, 123, 255, 0.5), rgba(0, 123, 255, 0.5)), linear-gradient(92.54deg, #1C80CF 47.88%, #FFFFFF 100.01%)' }}
-                >
-                    <div>
-                        <div className="text-blue-100 font-medium text-xl mt-2 mb-3">TAKE THE NEXT STEP</div>
-                        <div className="text-white font-medium text-5xl">Try PrimeBlocks</div>
-                    </div>
-                    <div className="mt-4 mr-auto md:mt-0 md:mr-0">
-                        <Link href="https://www.primefaces.org/primeblocks-react">
-                            <a className="p-button font-bold px-5 py-3 p-button-warning p-button-rounded p-button-raised">
-                                Get Started
-                            </a>
-                        </Link>
-                    </div>
-                </div>
+
             </div>
         </div>
     );

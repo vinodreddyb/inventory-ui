@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useRouter, withRouter } from 'next/router';
+import {useRouter, withRouter} from 'next/router';
 
 function ScrollToTop(props) {
     const router = useRouter();

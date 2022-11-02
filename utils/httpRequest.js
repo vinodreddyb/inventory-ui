@@ -1,6 +1,4 @@
 import axios from "axios";
-import createAuthRefreshInterceptor from 'axios-auth-refresh';
-import {API_ENDPOINT} from "../constants/config";
 
 /*const refreshToken = localStorage.getItem('refreshToken')
 

@@ -1,8 +1,8 @@
 import getConfig from 'next/config';
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
 import React from 'react';
 import AppConfig from '../../../layout/AppConfig';
-import { Button } from 'primereact/button';
+import {Button} from 'primereact/button';
 
 const ErrorPage = () => {
     const contextPath = getConfig().publicRuntimeConfig.contextPath;
@@ -24,7 +24,7 @@ const ErrorPage = () => {
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
     );
 };
 

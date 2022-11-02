@@ -1,8 +1,7 @@
 import getConfig from 'next/config';
-import { Button } from 'primereact/button';
-import { Card } from 'primereact/card';
-import { Timeline } from 'primereact/timeline';
-import { classNames } from 'primereact/utils';
+import {Button} from 'primereact/button';
+import {Card} from 'primereact/card';
+import {Timeline} from 'primereact/timeline';
 import React from 'react';
 
 const TimelineDemo = () => {

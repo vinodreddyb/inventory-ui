@@ -1,12 +1,12 @@
-import React, { useContext, useRef } from 'react';
+import React, {useContext, useRef} from 'react';
 import Link from 'next/link';
 import getConfig from 'next/config';
-import { StyleClass } from 'primereact/styleclass';
-import { Button } from 'primereact/button';
-import { Ripple } from 'primereact/ripple';
-import { Divider } from 'primereact/divider';
+import {StyleClass} from 'primereact/styleclass';
+import {Button} from 'primereact/button';
+import {Ripple} from 'primereact/ripple';
+import {Divider} from 'primereact/divider';
 import AppConfig from '../../layout/AppConfig';
-import { LayoutContext } from '../../layout/context/layoutcontext';
+import {LayoutContext} from '../../layout/context/layoutcontext';
 
 const LandingPage = () => {
     const contextPath = getConfig().publicRuntimeConfig.contextPath;

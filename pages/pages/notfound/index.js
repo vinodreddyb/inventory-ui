@@ -1,8 +1,7 @@
 import getConfig from 'next/config';
-import { useRouter } from 'next/router';
+import {useRouter} from 'next/router';
 import React from 'react';
 import AppConfig from '../../../layout/AppConfig';
-import { Button } from 'primereact/button';
 import Link from 'next/link';
 
 const NotFoundPage = () => {
@@ -54,7 +53,7 @@ const NotFoundPage = () => {
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
     );
 };
 

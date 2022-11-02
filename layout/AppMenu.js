@@ -1,9 +1,8 @@
 import getConfig from 'next/config';
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import AppMenuitem from './AppMenuitem';
-import { LayoutContext } from './context/layoutcontext';
-import { MenuProvider } from './context/menucontext';
-import Link from 'next/link';
+import {LayoutContext} from './context/layoutcontext';
+import {MenuProvider} from './context/menucontext';
 
 const AppMenu = () => {
     const { layoutConfig } = useContext(LayoutContext);
@@ -39,17 +38,17 @@ const AppMenu = () => {
             icon: 'pi pi-fw pi-briefcase',
             to: '/pages',
             items: [
-                {
+               /* {
                     label: 'Landing',
                     icon: 'pi pi-fw pi-globe',
                     to: '/landing'
-                },
+                },*/
                 {
                     label: 'Civil',
                     icon: 'pi pi-fw pi-globe',
                     to: '/pages/civil'
                 },
-                {
+                /*{
                     label: 'Auth',
                     icon: 'pi pi-fw pi-user',
                     items: [
@@ -69,8 +68,8 @@ const AppMenu = () => {
                             to: '/auth/access'
                         }
                     ]
-                },
-                {
+                },*/
+               /* {
                     label: 'Crud',
                     icon: 'pi pi-fw pi-pencil',
                     to: '/pages/crud'
@@ -84,7 +83,7 @@ const AppMenu = () => {
                     label: 'Not Found',
                     icon: 'pi pi-fw pi-exclamation-circle',
                     to: '/pages/notfound'
-                },
+                },*/
                 {
                     label: 'Empty',
                     icon: 'pi pi-fw pi-circle-off',

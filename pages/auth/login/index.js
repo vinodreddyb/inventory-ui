@@ -1,13 +1,13 @@
 import getConfig from 'next/config';
-import { useRouter } from 'next/router';
-import React, { useContext, useState } from 'react';
+import {useRouter} from 'next/router';
+import React, {useContext, useState} from 'react';
 import AppConfig from '../../../layout/AppConfig';
-import { Checkbox } from 'primereact/checkbox';
-import { Button } from 'primereact/button';
-import { Password } from 'primereact/password';
-import { LayoutContext } from '../../../layout/context/layoutcontext';
-import { InputText } from 'primereact/inputtext';
-import { classNames } from 'primereact/utils';
+import {Checkbox} from 'primereact/checkbox';
+import {Button} from 'primereact/button';
+import {Password} from 'primereact/password';
+import {LayoutContext} from '../../../layout/context/layoutcontext';
+import {InputText} from 'primereact/inputtext';
+import {classNames} from 'primereact/utils';
 
 const LoginPage = () => {
     const [password, setPassword] = useState('');
