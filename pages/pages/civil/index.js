@@ -22,7 +22,8 @@ const CivilPage = () => {
     const [values, setValues] = useState({})
     const [selNode, setSelNode] = useState({})
     const op = useRef(null);
-    const [nodeName,setNodeName] = useState('')
+    const [showAdd,setShowAdd] = useState({nodeId: '', show: false})
+
     useEffect(() => {
         if (!mounted.current) {
             // do componentDidMount logic
@@ -30,9 +31,8 @@ const CivilPage = () => {
             dispatch(civilActions.getFields())
             // dispatch(deviceActions.fetchAllDeviceTypes())
             mounted.current = true;
-            console.log("sel node ==> ", JSON.stringify(selNode))
+
         } else {
-            console.log("sel node ==> ", JSON.stringify(selNode))
             //selNode.children=subTree
             setLoadingn(false)
         }
@@ -50,6 +50,7 @@ const CivilPage = () => {
                         event.node.children = res
                     }
                     setLoadingn(false);
+                    setShowAdd({nodeId: node.id, show: true})
                 });
         }
     }
@@ -87,7 +88,6 @@ const CivilPage = () => {
                     })
                 }
             })
-            console.log("Values  ", JSON.stringify(vals))
 
             setValues(vals)
             setShowEntries(true)
@@ -99,7 +99,9 @@ const CivilPage = () => {
     }
     const nodeTemplate = (node, options) => {
 
+
         return (
+
             <div style={{width : '100%',justifyContent: "center"}}>
                 <span style={{width: '90%', float : "left", justifyContent: "center"}}>
                     {node.label}
@@ -108,7 +110,7 @@ const CivilPage = () => {
                     <Button icon="pi pi-plus" className="p-button-rounded p-button-danger p-button-text"
                             aria-label="Add"
                             tooltip="Click to add children"
-                            onClick={(e) => {setNodeName('');op.current.toggle(e)}}/>
+                            onClick={(e) => {setSelNode(node);op.current.toggle(e)}}/>
                 </div>
             </div>
 
@@ -119,7 +121,7 @@ const CivilPage = () => {
 
             <div className="col-12">
                 <ContextMenu model={menu} ref={cm} onHide={() => setSelectedNodeKey(null)}/>
-                <AddNode op={op} nodeName={nodeName}/>
+                <AddNode op={op} nodeName={selNode}/>
                 <Splitter style={{width: '100%', height: '91%'}}>
                     <SplitterPanel size={40} minSize={10}>
                         <ScrollPanel style={{width: '100%', height: '100%'}}>
