@@ -35,8 +35,6 @@ const CivilPage = () => {
 
 
     }, [dispatch, civilTree, subTree, loading, fields, error])
-    // console.log(JSON.stringify(civilTree))
-
 
     const loadOnExpand = (event) => {
         if (!event.node.children) {
@@ -53,8 +51,8 @@ const CivilPage = () => {
     }
     const menu = [
         {
-            label: 'View Key',
-            icon: 'pi pi-search',
+            label: 'Add',
+            icon: 'pi pi-plus',
             command: () => {
                 toast.current.show({severity: 'success', summary: 'Node Key', detail: selectedNodeKey});
             }

@@ -22,7 +22,7 @@ const AppTopbar = forwardRef((props, ref) => {
             <Link href="/">
                 <a className="layout-topbar-logo">
                     <>
-                        <img src={`${contextPath}/layout/images/logo-${layoutConfig.colorScheme !== 'light' ? 'white' : 'dark'}.svg`} width="47.22px" height={'35px'} widt={'true'} alt="logo" />
+                        <img src={`${contextPath}/layout/images/tabit1.png`} width="60px" height={'60px'} widt={'true'} alt="logo" />
                         <span>INVENTORY</span>
                     </>
                 </a>

@@ -4,6 +4,7 @@ import {InputText} from "primereact/inputtext";
 import {InputNumber} from "primereact/inputnumber";
 import {TabPanel, TabView} from "primereact/tabview";
 import {Button} from "primereact/button";
+import {Panel} from "primereact/panel";
 
 const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
     const [formFields, setFormFields] = useState({})
@@ -34,26 +35,16 @@ const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
         setMainFields(fields.filter(item=> item.group ==='Main'))
     },[])
 
-    const groupBy = (objectArray, property)=> {
-        return objectArray.reduce((acc, obj) => {
-            const key = obj[property];
-            if (!acc[key]) {
-                acc[key] = [];
-            }
-            // Add object to list for given key's value
-            acc[key].push(obj);
-            return acc;
-        }, {});
-    }
+
 
     function getFields(item) {
         return <div className="formgrid grid" key={item.group}>
             {item.fields.map((field, j) => {
                 return (
                     <Field name={`${item.group}-${field.name}`} key={`${item.group}-${field.name}`} render={({input, meta}) => (
-                        <div className="field col-2" key={`${item.group}-${field.name}`}>
-                                                            <span className="field col-12 md:col-3">
-                                                                <label htmlFor={`${item.group}-${field.name}`}>{field.label}</label>
+                        <div className="field col" key={`${item.group}-${field.name}`}>
+
+                                                                <label  htmlFor={`${item.group}-${field.name}`}>{field.label}</label>
                                                                 {(() => {
                                                                     switch (field.type) {
 
@@ -81,7 +72,7 @@ const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
                                                                     }
                                                                 })()}
 
-                                                            </span>
+
 
                         </div>
                     )}/>
@@ -94,38 +85,24 @@ const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
     return (
         <div className="grid">
             <div className="col-12">
-
                 <Form onSubmit={onSubmit} initialValues={initialValues}  render={({ handleSubmit }) => (
-
-
                     <form onSubmit={handleSubmit} className="p-fluid" noValidate>
-
                         {mainFields.map(item => {
-                            return(<div key={item.group} >
+                            return(<div className="card p-fluid" key={item.group} >
                                 {getFields(item)}
                             </div>)
                         })}
-
-
-                        <TabView renderActiveOnly={false}>
                             {tabFields.map(item => {
                                 return (
-                                    <TabPanel header={item.group} key={item.group}>
-
+                                    <Panel header={item.group.toUpperCase()}  className="p-fluid" key={item.group} toggleable>
                                         {getFields(item)}
-
-                                    </TabPanel>)
-
+                                    </Panel>
+                                    )
                             })}
-
-                        </TabView>
                         <Button type="submit" label="Save" className="mt-2"/>
                     </form>
                 )} />
-
-
             </div>
-
         </div>
     );
 }
