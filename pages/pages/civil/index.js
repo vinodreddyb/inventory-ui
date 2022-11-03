@@ -6,6 +6,8 @@ import {Tree} from "primereact/tree";
 import {Splitter, SplitterPanel} from "primereact/splitter";
 import {ContextMenu} from "primereact/contextmenu";
 import NewCivil from "./newCivil";
+import {Button} from "primereact/button";
+import AddNode from "./addNode";
 
 
 const CivilPage = () => {
@@ -19,6 +21,8 @@ const CivilPage = () => {
     const [showEntries, setShowEntries] = useState(false)
     const [values, setValues] = useState({})
     const [selNode, setSelNode] = useState({})
+    const op = useRef(null);
+    const [nodeName,setNodeName] = useState('')
     useEffect(() => {
         if (!mounted.current) {
             // do componentDidMount logic
@@ -93,18 +97,39 @@ const CivilPage = () => {
 
 
     }
+    const nodeTemplate = (node, options) => {
+
+        return (
+            <div style={{width : '100%',justifyContent: "center"}}>
+                <span style={{width: '90%', float : "left", justifyContent: "center"}}>
+                    {node.label}
+                </span>
+                <div style={{width: '10%' ,float : "right",justifyContent: "center"}}>
+                    <Button icon="pi pi-plus" className="p-button-rounded p-button-danger p-button-text"
+                            aria-label="Add"
+                            tooltip="Click to add children"
+                            onClick={(e) => {setNodeName('');op.current.toggle(e)}}/>
+                </div>
+            </div>
+
+        )
+    }
     return (
         <div className="grid">
 
             <div className="col-12">
                 <ContextMenu model={menu} ref={cm} onHide={() => setSelectedNodeKey(null)}/>
+                <AddNode op={op} nodeName={nodeName}/>
                 <Splitter style={{width: '100%', height: '91%'}}>
                     <SplitterPanel size={40} minSize={10}>
                         <ScrollPanel style={{width: '100%', height: '100%'}}>
-                            <Tree value={civilTree} selectionMode="single" loading={loadingn} onExpand={loadOnExpand} contextMenuSelectionKey={selectedNodeKey}
+
+                            <Tree value={civilTree} selectionMode="single" loading={loadingn} onExpand={loadOnExpand}
+                                  nodeTemplate={nodeTemplate}
+                                  contextMenuSelectionKey={selectedNodeKey}
                                   onContextMenuSelectionChange={event => setSelectedNodeKey(event.value)}
                                   onSelect={onSelect}
-                                  onContextMenu={event => loadContextMenu(event)}/>
+                                />
                         </ScrollPanel>
                     </SplitterPanel>
                     <SplitterPanel size={60} minSize={20}>
