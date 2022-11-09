@@ -117,16 +117,16 @@ const CivilPage = () => {
         )
     }
     return (
-        <div className="grid">
+        <div className="card">
 
-            <div className="col-12">
+
                 <ContextMenu model={menu} ref={cm} onHide={() => setSelectedNodeKey(null)}/>
                 <AddNode op={op} nodeName={selNode}/>
-                <Splitter style={{width: '100%', height: '91%'}}>
+                <Splitter style={{width: '100%'}}>
                     <SplitterPanel size={40} minSize={10}>
-                        <ScrollPanel style={{width: '100%', height: '100%'}}>
+                        <ScrollPanel  style={{width: '100%', height: '80vh'}}>
 
-                            <Tree value={civilTree} selectionMode="single" loading={loadingn} onExpand={loadOnExpand}
+                            <Tree style={{border:'none'}} value={civilTree} selectionMode="single" loading={loadingn} onExpand={loadOnExpand}
                                   nodeTemplate={nodeTemplate}
                                   contextMenuSelectionKey={selectedNodeKey}
                                   onContextMenuSelectionChange={event => setSelectedNodeKey(event.value)}
@@ -135,13 +135,13 @@ const CivilPage = () => {
                         </ScrollPanel>
                     </SplitterPanel>
                     <SplitterPanel size={60} minSize={20}>
-                        <ScrollPanel style={{width: '100%', height: '100%'}}>
+                        <ScrollPanel style={{width: '100%', height: '600px',padding: '0.5em'}}>
                             {showEntries ? <NewCivil fields={fields} initialValues={values}/> : <span/>}
 
                         </ScrollPanel>
                     </SplitterPanel>
                 </Splitter>
-            </div>
+
         </div>
     );
 };

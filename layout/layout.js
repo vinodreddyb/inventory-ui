@@ -130,7 +130,7 @@ const Layout = (props) => {
                     <AppFooter />
                 </div>
                 <AppConfig />
-                <div className="layout-mask"></div>
+
             </div>
         </React.Fragment>
     );

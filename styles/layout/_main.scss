@@ -26,3 +26,13 @@ a {
 .layout-wrapper {
     min-height: 100vh;
 }
+.p-timeline .p-timeline-event-connector {
+    background-color : blue;
+}
+
+.p-timeline1 {
+    .p-timeline-event-connector  {
+        background-color : gray;
+
+    }
+}

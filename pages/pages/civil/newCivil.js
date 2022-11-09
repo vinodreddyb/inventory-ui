@@ -5,6 +5,7 @@ import {InputNumber} from "primereact/inputnumber";
 import {TabPanel, TabView} from "primereact/tabview";
 import {Button} from "primereact/button";
 import {Panel} from "primereact/panel";
+import {Calendar} from "primereact/calendar";
 
 const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
     const [formFields, setFormFields] = useState({})
@@ -13,10 +14,24 @@ const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
 
 
     const onSubmit = (data, form) => {
-        console.log(data)
+        const formatter = new Intl.DateTimeFormat("en-GB", { // <- re-use me
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        })
+        let data1 = formatter.format(data['Main-startDate']);
+        console.log(data1)
+       // console.log( dateToYMD(data['Main-startDate']))
+        var date = new Date("11-18-2022");
+        console.log(date);
         form.restart();
     };
-
+    function dateToYMD(date) {
+        const d = date.getDate();
+        const m = date.getMonth() + 1; //Month from 0 to 11
+        const y = date.getFullYear();
+        return '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+    }
 
     useEffect(() => {
         const iv = {}
@@ -50,7 +65,7 @@ const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
 
                                                                         case "InputText":
                                                                             return <InputText id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`}   {...input}/>
-                                                                            break;
+
                                                                         case "InputNumber":
                                                                             return (field.attributes.mode === 'currency' ?
                                                                                 <InputNumber id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`}
@@ -66,7 +81,15 @@ const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
                                                                                                    input.onChange(e.value)
                                                                                                }}
                                                                                 />);
-                                                                            break;
+
+                                                                        case "Calendar":
+                                                                            return (<Calendar id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`} {...input}
+                                                                                              dateFormat="dd/mm/yy"
+
+
+                                                                                              onChange={e => {
+                                                                                                  input.onChange(e.value)
+                                                                                              }} />)
                                                                         default:
                                                                             return <InputText id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`}   {...input}/>
                                                                     }
@@ -94,7 +117,7 @@ const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
                         })}
                             {tabFields.map(item => {
                                 return (
-                                    <Panel header={item.group.toUpperCase()}  className="p-fluid" key={item.group} toggleable>
+                                    <Panel header={item.group.toUpperCase()}  className="p-fluid" style={{marginTop:5}} key={item.group} toggleable>
                                         {getFields(item)}
                                     </Panel>
                                     )
