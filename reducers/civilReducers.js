@@ -7,42 +7,36 @@ const initialState = {
     error: null,
     loading:false,
     message: '',
+    updateNodeValues: false
   };
 
 function getCivilTree(action,civilTree) {
 
     if(!action.payload.body) return civilTree;
 
-    const trr = action.payload.body.map((n, i) => {
+    const trr = action.payload.body.map((n) => {
         return {
+            ...n,
             key: n.id,
             label: n.name,
             leaf: false,
             path: n.path.slice(1,-1),
-            id: n.id,
-            supply: n.supply,
-            install: n.install,
-            unit: n.unit,
-            quantity: n.quantity
+            startDate: new Date(n.startDate),
+            endDate: new Date(n.endDate)
         }
     });
 
     if(civilTree.length > 0) {
         const ss = trr[0].path.split(",");
-
         const ss1 = ss[ss.length-1]
+        return civilTree.map(pa => {
+            //   console.log("Matched " + pa.id + ":" +ss1,pa.id ===ss1)
 
-
-        const cc = civilTree.map(pa=> {
-         //   console.log("Matched " + pa.id + ":" +ss1,pa.id ===ss1)
-
-            if(pa.id ===ss1) {
+            if (pa.id === ss1) {
                 pa['children'] = trr
             }
             return pa
         })
-        console.log(JSON.stringify(cc))
-        return cc
     } else {
         return trr
     }
@@ -92,6 +86,16 @@ const civilReducers = (state = initialState, action)=>{
               return {
                   ...state,
                   fields: action.payload.body,
+                  loading: false,
+                  error: null
+              }
+          }
+          case CIVIL.UPDATE_VALUES: {
+              return {
+                  ...state,
+                  message: 'Update Successfully',
+                  updateNodeValues: true,
+                  loading: false,
                   error: null
               }
           }

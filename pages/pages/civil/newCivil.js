@@ -1,31 +1,38 @@
 import {Field, Form} from 'react-final-form';
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {InputText} from "primereact/inputtext";
 import {InputNumber} from "primereact/inputnumber";
-import {TabPanel, TabView} from "primereact/tabview";
 import {Button} from "primereact/button";
 import {Panel} from "primereact/panel";
 import {Calendar} from "primereact/calendar";
+import {Toast} from "primereact/toast";
 
-const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
-    const [formFields, setFormFields] = useState({})
+const NewCivilForm = ({initialValues, formSubmit: formSubmit, nodeId, fields}) => {
     const [mainFields, setMainFields] = useState([])
     const [tabFields, setTabFields] = useState([])
+    const toast = useRef(null);
 
 
     const onSubmit = (data, form) => {
-        const formatter = new Intl.DateTimeFormat("en-GB", { // <- re-use me
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-        })
-        let data1 = formatter.format(data['Main-startDate']);
-        console.log(data1)
-       // console.log( dateToYMD(data['Main-startDate']))
-        var date = new Date("11-18-2022");
-        console.log(date);
+        let res = {}
+        for (const property in data) {
+            let val = (data[property] instanceof Date && !isNaN(data[property]))? dateToYMD(data[property]) : data[property]
+            if(property.startsWith('Main')) {
+                res[property.substring(property.indexOf("-") + 1)] = val
+            } else {
+                const sp = property.toLowerCase().replace("-",".")
+                set(res, sp ,val )
+            }
+        }
+        res['id'] = nodeId
+        formSubmit(res)
         form.restart();
     };
+    function set(obj = {}, key, val) {
+        const keys = key.split('.')
+        const last = keys.pop()
+        keys.reduce((o, k) => o[k] ??= {}, obj)[last] = val
+    }
     function dateToYMD(date) {
         const d = date.getDate();
         const m = date.getMonth() + 1; //Month from 0 to 11
@@ -45,7 +52,6 @@ const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
             })
 
         })
-        setFormFields(iv)
         setTabFields(fields.filter(item=> item.group !=='Main'))
         setMainFields(fields.filter(item=> item.group ==='Main'))
     },[])
@@ -54,7 +60,8 @@ const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
 
     function getFields(item) {
         return <div className="formgrid grid" key={item.group}>
-            {item.fields.map((field, j) => {
+            <Toast ref={toast} />
+            {item.fields.map((field) => {
                 return (
                     <Field name={`${item.group}-${field.name}`} key={`${item.group}-${field.name}`} render={({input, meta}) => (
                         <div className="field col" key={`${item.group}-${field.name}`}>
@@ -67,26 +74,34 @@ const NewCivilForm = ({initialValues, formsubmit, actionType, fields}) => {
                                                                             return <InputText id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`}   {...input}/>
 
                                                                         case "InputNumber":
-                                                                            return (field.attributes.mode === 'currency' ?
-                                                                                <InputNumber id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`}
-                                                                                             {...input}
-                                                                                             onChange={e => {
-                                                                                                 input.onChange(e.value)
-                                                                                             }}
-
-                                                                                             mode="currency" currency={field.attributes.currency} locale={field.attributes.locale}/>
-                                                                                : <InputNumber id={`${item.group}-${field.name}`}
-                                                                                               {...input}
-                                                                                               onChange={e => {
-                                                                                                   input.onChange(e.value)
-                                                                                               }}
-                                                                                />);
-
+                                                                             switch (field.attributes.mode) {
+                                                                                 case "currency" :
+                                                                                     return ( <InputNumber id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`}
+                                                                                                           {...input}
+                                                                                                           onChange={e => {
+                                                                                                               input.onChange(e.value)
+                                                                                                           }}
+                                                                                                           mode="currency" currency={field.attributes.currency} locale={field.attributes.locale}/>)
+                                                                                 case "decimal" :
+                                                                                     return (<InputNumber id={`${item.group}-${field.name}`}
+                                                                                                          {...input}
+                                                                                                          minFractionDigits={1} maxFractionDigits={2}
+                                                                                                          suffix="%"
+                                                                                                          onChange={e => {
+                                                                                                              input.onChange(e.value)
+                                                                                                          }}
+                                                                                     />)
+                                                                                 default :
+                                                                                     return (<InputNumber id={`${item.group}-${field.name}`}
+                                                                                                  {...input}
+                                                                                                  onChange={e => {
+                                                                                                      input.onChange(e.value)
+                                                                                                  }}
+                                                                                     />)
+                                                                             }
                                                                         case "Calendar":
                                                                             return (<Calendar id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`} {...input}
-                                                                                              dateFormat="dd/mm/yy"
-
-
+                                                                                              dateFormat="yy-mm-dd"
                                                                                               onChange={e => {
                                                                                                   input.onChange(e.value)
                                                                                               }} />)

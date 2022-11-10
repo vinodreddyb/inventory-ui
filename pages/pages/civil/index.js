@@ -8,16 +8,20 @@ import {ContextMenu} from "primereact/contextmenu";
 import NewCivil from "./newCivil";
 import {Button} from "primereact/button";
 import AddNode from "./addNode";
+import {ProgressSpinner} from "primereact/progressspinner";
+import {Toast} from "primereact/toast";
 
 
 const CivilPage = () => {
     const dispatch = useDispatch();
-    const {civilTree, fields, error, loading, subTree} = useSelector(state => state.civil)
+    const {civilTree, fields, error, loading, subTree,updateNodeValues,message} = useSelector(state => state.civil)
     const mounted = useRef(false);
     const [loadingn, setLoadingn] = useState(true);
     const toast = useRef(null);
+    const [showToast, setShowToast] = useState(true)
     const cm = useRef(null);
     const [selectedNodeKey, setSelectedNodeKey] = useState(null);
+    const [selectedNodeId, setSelectedNodeId] = useState('')
     const [showEntries, setShowEntries] = useState(false)
     const [values, setValues] = useState({})
     const [selNode, setSelNode] = useState({})
@@ -34,11 +38,17 @@ const CivilPage = () => {
 
         } else {
             //selNode.children=subTree
+            if(showToast && updateNodeValues) {
+                toast.current.show({severity: 'success', summary: message, life: 3000});
+                setShowToast(false)
+            }else if(error && showToast) {
+                toast.current.show({severity: 'error', summary: JSON.stringify(error), life: 3000});
+            }
             setLoadingn(false)
         }
 
 
-    }, [dispatch, civilTree, subTree, loading, fields, error])
+    }, [dispatch, civilTree, subTree, loading, fields, error,updateNodeValues,message])
 
     const loadOnExpand = (event) => {
         if (!event.node.children) {
@@ -47,6 +57,7 @@ const CivilPage = () => {
             Promise.resolve(civilActions.getSubTree("," + node.path + "," + node.id + ","))
                 .then(res => {
                     if(res) {
+                        console.log("SS--", JSON.stringify(res))
                         event.node.children = res
                     }
                     setLoadingn(false);
@@ -91,6 +102,7 @@ const CivilPage = () => {
 
             setValues(vals)
             setShowEntries(true)
+            setSelectedNodeId(event.node.id)
         } else {
             setShowEntries(false)
         }
@@ -98,8 +110,6 @@ const CivilPage = () => {
 
     }
     const nodeTemplate = (node, options) => {
-
-
         return (
 
             <div style={{width : '100%',justifyContent: "center"}}>
@@ -116,12 +126,18 @@ const CivilPage = () => {
 
         )
     }
+    const setNodeValues = (data) => {
+        dispatch(civilActions.setNodeValues(data))
+    }
     return (
         <div className="card">
-
-
+            <Toast ref={toast} />
                 <ContextMenu model={menu} ref={cm} onHide={() => setSelectedNodeKey(null)}/>
                 <AddNode op={op} nodeName={selNode}/>
+            {loading ?
+                <div className="p-d-flex p-jc-center">
+                    <ProgressSpinner style={{width: '150px', height: '150px', margin : '0 auto'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>
+                </div> :
                 <Splitter style={{width: '100%'}}>
                     <SplitterPanel size={40} minSize={10}>
                         <ScrollPanel  style={{width: '100%', height: '80vh'}}>
@@ -136,11 +152,11 @@ const CivilPage = () => {
                     </SplitterPanel>
                     <SplitterPanel size={60} minSize={20}>
                         <ScrollPanel style={{width: '100%', height: '600px',padding: '0.5em'}}>
-                            {showEntries ? <NewCivil fields={fields} initialValues={values}/> : <span/>}
+                            {showEntries ? <NewCivil fields={fields} nodeId={selectedNodeId} initialValues={values} formSubmit={setNodeValues}/> : <span/>}
 
                         </ScrollPanel>
                     </SplitterPanel>
-                </Splitter>
+                </Splitter>}
 
         </div>
     );

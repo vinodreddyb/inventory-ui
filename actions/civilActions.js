@@ -24,15 +24,14 @@ export function getSubTree(path){
                     if(data){
                         return data.map((n) => {
                             return {
+                                ...n,
                                 key: n.id,
                                 label: n.name,
                                 leaf: false,
                                 path: n.path.slice(1, -1),
-                                id: n.id,
-                                supply: n.supply,
-                                install: n.install,
-                                unit: n.unit,
-                                quantity: n.quantity
+                                startDate: new Date(n.startDate),
+                                endDate: new Date(n.endDate)
+
                             }
                         })
                     }
@@ -55,10 +54,24 @@ export function getFields(){
     };
 }
 
+export function setNodeValues(data){
+    const url = `${API_ENDPOINT}/civil/node/values`
+    return async dispatch => {
+        try {
+            dispatch({ type: CIVIL.LOADING })
+            httpRequest({method:'put',url: url, data:data}).then((response) =>
+                dispatch({type: CIVIL.UPDATE_VALUES,payload: response.data}))
+        }catch (error) {
+            dispatch({type: CIVIL.GET_ALL_ERROR,payload: error.message })
+        }
+    };
+}
+
 const civilActions = {
     getTopLevel: getTopLevel,
     getFields: getFields,
-    getSubTree: getSubTree
+    getSubTree: getSubTree,
+    setNodeValues: setNodeValues
 
 }
 
