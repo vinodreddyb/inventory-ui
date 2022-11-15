@@ -1,11 +1,12 @@
 import {Field, Form} from 'react-final-form';
-import {useEffect, useRef, useState} from "react";
+import React,{useEffect, useRef, useState} from "react";
 import {InputText} from "primereact/inputtext";
 import {InputNumber} from "primereact/inputnumber";
 import {Button} from "primereact/button";
 import {Panel} from "primereact/panel";
 import {Calendar} from "primereact/calendar";
 import {Toast} from "primereact/toast";
+import {InputSwitch} from "primereact/inputswitch";
 
 const NewCivilForm = ({initialValues, formSubmit: formSubmit, nodeId, fields}) => {
     const [mainFields, setMainFields] = useState([])
@@ -25,6 +26,7 @@ const NewCivilForm = ({initialValues, formSubmit: formSubmit, nodeId, fields}) =
             }
         }
         res['id'] = nodeId
+        res['type'] = (data['Main-type'])? "TENDER" : "NON-TENDER"
         formSubmit(res)
         form.restart();
     };
@@ -55,8 +57,6 @@ const NewCivilForm = ({initialValues, formSubmit: formSubmit, nodeId, fields}) =
         setTabFields(fields.filter(item=> item.group !=='Main'))
         setMainFields(fields.filter(item=> item.group ==='Main'))
     },[])
-
-
 
     function getFields(item) {
         return <div className="formgrid grid" key={item.group}>
@@ -105,6 +105,20 @@ const NewCivilForm = ({initialValues, formSubmit: formSubmit, nodeId, fields}) =
                                                                                               onChange={e => {
                                                                                                   input.onChange(e.value)
                                                                                               }} />)
+                                                                        case "InputSwitch":
+                                                                            return (<React.Fragment><br/><InputSwitch id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`}
+                                                                                                 checked={initialValues[`${item.group}-${field.name}`] === 'TENDER'}
+                                                                                                 onChange={e => {
+                                                                                                     input.onChange(e.value)
+                                                                                                     if(e.value) {
+                                                                                                         console.log(e.value)
+                                                                                                         initialValues[`${item.group}-${field.name}`] = "TENDER"
+                                                                                                     } else {
+                                                                                                         initialValues[`${item.group}-${field.name}`] = "NON-TENDER"
+                                                                                                     }
+                                                                                                 }}
+
+                                                                                                 /></React.Fragment>)
                                                                         default:
                                                                             return <InputText id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`}   {...input}/>
                                                                     }

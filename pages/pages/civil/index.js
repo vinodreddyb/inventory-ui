@@ -10,6 +10,7 @@ import {Button} from "primereact/button";
 import AddNode from "./addNode";
 import {ProgressSpinner} from "primereact/progressspinner";
 import {Toast} from "primereact/toast";
+import {SelectButton} from "primereact/selectbutton";
 
 
 const CivilPage = () => {
@@ -50,8 +51,10 @@ const CivilPage = () => {
 
     }, [dispatch, civilTree, subTree, loading, fields, error,updateNodeValues,message])
 
-    const loadOnExpand = (event) => {
+    const loadOnExpand = (event,options) => {
+        console.log("SS",event)
         if (!event.node.children) {
+            console.log("SS1")
             setLoadingn(true);
             let node = {...event.node};
             Promise.resolve(civilActions.getSubTree("," + node.path + "," + node.id + ","))
@@ -129,34 +132,85 @@ const CivilPage = () => {
     const setNodeValues = (data) => {
         dispatch(civilActions.setNodeValues(data))
     }
+    //const optionsB = ['Both', 'Tender', 'Non-Tender'];
+    const optionsB= [
+        {label: 'Both', value: 'Both'},
+        {label: 'Tender', value: 'TENDER'},
+        {label: 'Non-Tender', value: 'NON-TENDER'}
+    ]
+    const [value1, setValue1] = useState(true);
+    const filterTemplate = (options) => {
+        let {filterOptions} = options;
+
+        return (
+            <div className="flex gap-2">
+                   <SelectButton value={value1} options={optionsB} optionLabel="label" onChange={(e) => myFilterFunction(e,filterOptions)} />
+
+
+            </div>
+        )
+    }
+    const myFilterFunction = (event, options) => {
+        console.log("TT",event.target)
+        if(event.target.value==='Both'){
+            console.log("Both")
+            setValue1(event.target.value)
+            options.reset();
+        } else {
+            setValue1(event.target.value)
+            options.filter(event);
+        }
+
+       /* if(event.target.value==='Both'){
+            console.log("Both")
+            options.reset();
+        } else if(event.target.value==='Tender') {
+            console.log("TT")
+            setValue1({'Tender': true})
+            options.filter(event);
+        } else if(event.target.value==='Non-Tender') {
+            console.log("NTT")
+            setValue1({'Non-Tender': false})
+            options.filter(event.target.value);
+        }*/
+
+    }
     return (
         <div className="card">
-            <Toast ref={toast} />
+                <Toast ref={toast} />
                 <ContextMenu model={menu} ref={cm} onHide={() => setSelectedNodeKey(null)}/>
                 <AddNode op={op} nodeName={selNode}/>
             {loading ?
                 <div className="p-d-flex p-jc-center">
                     <ProgressSpinner style={{width: '150px', height: '150px', margin : '0 auto'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>
                 </div> :
-                <Splitter style={{width: '100%'}}>
-                    <SplitterPanel size={40} minSize={10}>
-                        <ScrollPanel  style={{width: '100%', height: '80vh'}}>
+                <React.Fragment>
 
-                            <Tree style={{border:'none'}} value={civilTree} selectionMode="single" loading={loadingn} onExpand={loadOnExpand}
-                                  nodeTemplate={nodeTemplate}
-                                  contextMenuSelectionKey={selectedNodeKey}
-                                  onContextMenuSelectionChange={event => setSelectedNodeKey(event.value)}
-                                  onSelect={onSelect}
+                         <Splitter style={{width: '100%'}}>
+                        <SplitterPanel size={40} minSize={10}>
+                            <ScrollPanel  style={{width: '100%', height: '80vh'}}>
+
+                                <Tree id="tr"  style={{border:'none'}} value={civilTree} selectionMode="single" loading={loadingn} onExpand={loadOnExpand}
+                                      nodeTemplate={nodeTemplate}
+                                      filter
+                                      filterBy="type"
+                                      filterTemplate={filterTemplate}
+                                      contextMenuSelectionKey={selectedNodeKey}
+                                      onContextMenuSelectionChange={event => setSelectedNodeKey(event.value)}
+                                      onSelect={onSelect}
+
                                 />
-                        </ScrollPanel>
-                    </SplitterPanel>
-                    <SplitterPanel size={60} minSize={20}>
-                        <ScrollPanel style={{width: '100%', height: '600px',padding: '0.5em'}}>
-                            {showEntries ? <NewCivil fields={fields} nodeId={selectedNodeId} initialValues={values} formSubmit={setNodeValues}/> : <span/>}
+                            </ScrollPanel>
+                        </SplitterPanel>
+                        <SplitterPanel size={60} minSize={20}>
+                            <ScrollPanel style={{width: '100%', height: '600px',padding: '0.5em'}}>
+                                {showEntries ? <NewCivil fields={fields} nodeId={selectedNodeId} initialValues={values} formSubmit={setNodeValues}/> : <span/>}
 
-                        </ScrollPanel>
-                    </SplitterPanel>
-                </Splitter>}
+                            </ScrollPanel>
+                        </SplitterPanel>
+                    </Splitter>
+                </React.Fragment>
+                }
 
         </div>
     );
