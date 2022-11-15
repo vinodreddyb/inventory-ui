@@ -11,6 +11,8 @@ import AddNode from "./addNode";
 import {ProgressSpinner} from "primereact/progressspinner";
 import {Toast} from "primereact/toast";
 import {SelectButton} from "primereact/selectbutton";
+import {TabPanel, TabView} from "primereact/tabview";
+import StatusForm from "./status";
 
 
 const CivilPage = () => {
@@ -203,10 +205,19 @@ const CivilPage = () => {
                             </ScrollPanel>
                         </SplitterPanel>
                         <SplitterPanel size={60} minSize={20}>
-                            <ScrollPanel style={{width: '100%', height: '600px',padding: '0.5em'}}>
-                                {showEntries ? <NewCivil fields={fields} nodeId={selectedNodeId} initialValues={values} formSubmit={setNodeValues}/> : <span/>}
+                            <TabView>
+                                <TabPanel header="Admin">
+                                    <ScrollPanel style={{width: '100%', height: '600px',padding: '0.5em'}}>
+                                        {showEntries ? <NewCivil fields={fields} nodeId={selectedNodeId} initialValues={values} formSubmit={setNodeValues}/> : <span/>}
 
-                            </ScrollPanel>
+                                    </ScrollPanel>
+                                </TabPanel>
+                                <TabPanel header="Status">
+                                    {showEntries ? <StatusForm  nodeId={selectedNodeId} /> : <span/>}
+                                </TabPanel>
+
+                            </TabView>
+
                         </SplitterPanel>
                     </Splitter>
                 </React.Fragment>
