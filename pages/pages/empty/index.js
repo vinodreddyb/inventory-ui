@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Timeline} from "primereact/timeline";
 import './timeline.module.css'
 import {Card} from "primereact/card";
 import {Badge} from "primereact/badge";
+import {Chart} from "primereact/chart";
 const EmptyPage = () => {
     const events2 = [
         '2020', '2021', '2022', '2023'
@@ -47,7 +48,53 @@ const EmptyPage = () => {
             </Card>
         );
     };
+    const [basicData] = useState({
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [
+            {
+                label: 'My First dataset',
+                backgroundColor: '#42A5F5',
+                data: [10, 20, 30],
+            }
+        ]
+    });
 
+    let basicOptions = {
+        maintainAspectRatio: false,
+        aspectRatio: .8,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#495057'
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: '#495057'
+                },
+                grid: {
+                    color: '#ebedef'
+                }
+            },
+            y: {
+                min: 0,
+                max: 100,
+                type: 'linear',
+                display: true,
+                position: 'left',
+                ticks: {
+                    color: '#495057'
+                },
+                grid: {
+                    color: '#ebedef',
+                    min: 0,
+                    max: 100,
+                }
+            }
+        }
+    };
     return (
         <div className="grid">
             <div className="col-12">
@@ -57,7 +104,9 @@ const EmptyPage = () => {
                     <div className="timeline-demo">
 
                         <Timeline className="customized-timeline"   value={events1} marker={customizedMarker} content={(item) => <small className="p-text-secondary">{item.date}</small>} layout="horizontal"  />
+
                       </div>
+                    <Chart type="bar" data={basicData} options={basicOptions} />
                 </div>
             </div>
         </div>

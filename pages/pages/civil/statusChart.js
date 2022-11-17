@@ -24,13 +24,18 @@ const StatusChart = ({data,node}) => {
                 }
             },
             y: {
+                min: 0,
+                max: 100,
+                type: 'linear',
+                display: true,
+                position: 'left',
                 ticks: {
-                    color: '#495057',
-                    min: 0,
-                    max: 100,
+                    color: '#495057'
                 },
                 grid: {
-                    color: '#ebedef'
+                    color: '#ebedef',
+                    min: 0,
+                    max: 100,
                 }
             }
         }
