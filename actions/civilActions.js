@@ -68,12 +68,21 @@ export function setNodeValues(data){
         }
     };
 }
-
+export function getStatusGraph(nodeId){
+    const url = `${API_ENDPOINT}/civil/status/${nodeId}?graph=true`
+    try {
+        return httpRequest({url})
+            .then((response) => response.data.body)
+    }catch (error) {
+        console.log("Error while fetching subtree ", error)
+    }
+}
 const civilActions = {
     getTopLevel: getTopLevel,
     getFields: getFields,
     getSubTree: getSubTree,
-    setNodeValues: setNodeValues
+    setNodeValues: setNodeValues,
+    getStatusGraph: getStatusGraph
 
 }
 

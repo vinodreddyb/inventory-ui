@@ -7,7 +7,10 @@ const initialState = {
     error: null,
     loading:false,
     message: '',
-    updateNodeValues: false
+    updateNodeValues: false,
+    status: {},
+    tenderTree:[],
+    nonTenderTree:[],
   };
 
 function getCivilTree(action,civilTree) {
@@ -43,7 +46,13 @@ function getCivilTree(action,civilTree) {
 
 
 }
-
+function groupByKey(array, key) {
+    return array
+        .reduce((hash, obj) => {
+            if(obj[key] === undefined) return hash;
+            return Object.assign(hash, { [obj[key]]:( hash[obj[key]] || [] ).concat(obj)})
+        }, {})
+}
 const civilReducers = (state = initialState, action)=>{
       switch(action.type){
           case 'LOADING' : {
@@ -56,10 +65,13 @@ const civilReducers = (state = initialState, action)=>{
               }
           }
           case CIVIL.GET_ALL_TOP_TREE: {
-
+              let ct= getCivilTree(action, state.civilTree)
+              let gr = groupByKey(ct,"type");
               return {
                   ...state,
                   civilTree: getCivilTree(action, state.civilTree),
+                  tenderTree: gr["TENDER"],
+                  nonTenderTree: gr["NON-TENDER"],
                   error: null
               }
           }
@@ -98,6 +110,15 @@ const civilReducers = (state = initialState, action)=>{
                   loading: false,
                   error: null
               }
+          }
+          case CIVIL.GET_STATUS : {
+             return {
+                 ...state,
+                 status: action.payload.body,
+                 loading: false,
+                 error: null
+             }
+
           }
 
           default: return state
