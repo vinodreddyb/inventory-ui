@@ -120,6 +120,14 @@ const civilReducers = (state = initialState, action)=>{
              }
 
           }
+          case CIVIL.SAVE_STATUS : {
+              return {
+                  ...state,
+                  message: 'Work status successfully',
+                  loading: false,
+                  error: null
+              }
+          }
 
           default: return state
       }

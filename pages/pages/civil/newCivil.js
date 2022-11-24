@@ -7,6 +7,7 @@ import {Panel} from "primereact/panel";
 import {Calendar} from "primereact/calendar";
 import {Toast} from "primereact/toast";
 import {InputSwitch} from "primereact/inputswitch";
+import {InputTextarea} from "primereact/inputtextarea";
 
 const NewCivilForm = ({initialValues, formSubmit: formSubmit, nodeId, fields}) => {
     const [mainFields, setMainFields] = useState([])
@@ -27,7 +28,13 @@ const NewCivilForm = ({initialValues, formSubmit: formSubmit, nodeId, fields}) =
         }
         res['id'] = nodeId
         res['type'] = (data['Main-type'])? "TENDER" : "NON-TENDER"
-        formSubmit(res)
+        if(initialValues['newChild']) {
+            formSubmit(res,true)
+        } else {
+            formSubmit(res,false)
+        }
+
+
         form.restart();
     };
     function set(obj = {}, key, val) {
@@ -56,12 +63,13 @@ const NewCivilForm = ({initialValues, formSubmit: formSubmit, nodeId, fields}) =
         })
         setTabFields(fields.filter(item=> item.group !=='Main'))
         setMainFields(fields.filter(item=> item.group ==='Main'))
+
     },[])
 
     function getFields(item) {
         return <div className="formgrid grid" key={item.group}>
             <Toast ref={toast} />
-            {item.fields.map((field) => {
+            {item.fields.filter(field => field.name !=='name').map((field) => {
                 return (
                     <Field name={`${item.group}-${field.name}`} key={`${item.group}-${field.name}`} render={({input, meta}) => (
                         <div className="field col" key={`${item.group}-${field.name}`}>
@@ -119,6 +127,8 @@ const NewCivilForm = ({initialValues, formSubmit: formSubmit, nodeId, fields}) =
                                                                                                  }}
 
                                                                                                  /></React.Fragment>)
+                                                                        case "InputTextarea":
+                                                                            return <InputTextarea  id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`} {...input} autoResize />
                                                                         default:
                                                                             return <InputText id={`${item.group}-${field.name}`} name={`${item.group}-${field.name}`}   {...input}/>
                                                                     }
@@ -139,6 +149,11 @@ const NewCivilForm = ({initialValues, formSubmit: formSubmit, nodeId, fields}) =
             <div className="col-12">
                 <Form onSubmit={onSubmit} initialValues={initialValues}  render={({ handleSubmit }) => (
                     <form onSubmit={handleSubmit} className="p-fluid" noValidate>
+                        <Field name="Main-name" key="Main-name" render={({input, meta}) => (
+                        <div className="field col" >
+                            <label  htmlFor="">Name</label>
+                            <InputTextarea rows={5} id="Main-name" name="Main-name"   {...input}/>
+                        </div>)}/>
                         {mainFields.map(item => {
                             return(<div className="card p-fluid" key={item.group} >
                                 {getFields(item)}

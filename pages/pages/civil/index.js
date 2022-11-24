@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {ScrollPanel} from "primereact/scrollpanel";
 import {useDispatch, useSelector} from "react-redux";
-import civilActions from "../../../actions/civilActions";
+import civilActions, {addChildNode} from "../../../actions/civilActions";
 import {Tree} from "primereact/tree";
 import {Splitter, SplitterPanel} from "primereact/splitter";
 import {ContextMenu} from "primereact/contextmenu";
@@ -20,7 +20,7 @@ import StatusChart from "./statusChart";
 
 const CivilPage = () => {
     const dispatch = useDispatch();
-    const {tenderTree,nonTenderTree, fields, error, loading, subTree, updateNodeValues, message} = useSelector(state => state.civil)
+    const {tenderTree, nonTenderTree, fields, error, loading, subTree, updateNodeValues, message} = useSelector(state => state.civil)
     const mounted = useRef(false);
     const [loadingn, setLoadingn] = useState(true);
     const toast = useRef(null);
@@ -35,7 +35,8 @@ const CivilPage = () => {
     const [showAddStatus, setShowAddStatus] = useState(false)
     const [showStatus, setShowStatus] = useState(false)
     const [statusData, setStatusData] = useState({})
-
+    const [expandedKeys, setExpandedKeys] = useState({});
+    const [expandedKeys1, setExpandedKeys1] = useState({});
     useEffect(() => {
         if (!mounted.current) {
             // do componentDidMount logic
@@ -46,10 +47,11 @@ const CivilPage = () => {
 
         } else {
             //selNode.children=subTree
-            if (showToast && updateNodeValues) {
+            if (showToast && message) {
                 toast.current.show({severity: 'success', summary: message, life: 3000});
-                setShowToast(false)
+               /* setShowToast(false)
                 setShowEntries(false)
+                setShowAddStatus(false)*/
             } else if (error && showToast) {
                 toast.current.show({severity: 'error', summary: JSON.stringify(error), life: 3000});
             }
@@ -57,24 +59,23 @@ const CivilPage = () => {
         }
 
 
-    }, [dispatch, tenderTree,nonTenderTree, subTree, loading, fields, error, updateNodeValues, message])
+    }, [dispatch, tenderTree, nonTenderTree, subTree, loading, fields, updateNodeValues])
 
     const loadOnExpand = (event, options) => {
-        console.log("SS", event)
-        if (!event.node.children) {
-            console.log("SS1")
-            setLoadingn(true);
-            let node = {...event.node};
-            Promise.resolve(civilActions.getSubTree("," + node.path + "," + node.id + ","))
-                .then(res => {
-                    if (res) {
-                        console.log("SS--", JSON.stringify(res))
-                        event.node.children = res
-                    }
-                    setLoadingn(false);
-                    //setShowAdd({nodeId: node.id, show: true})
-                });
-        }
+
+        setLoadingn(true);
+        let node = {...event.node};
+        Promise.resolve(civilActions.getSubTree("," + node.path + "," + node.id + ","))
+            .then(res => {
+                if (res) {
+                    console.log("SS--", JSON.stringify(res))
+                    event.node.children = res
+                }
+                setLoadingn(false);
+                //setShowAdd({nodeId: node.id, show: true})
+            });
+
+
     }
     const menu = [
         {
@@ -92,11 +93,22 @@ const CivilPage = () => {
         }
         //cm.current.show(event.originalEvent)
     }
-    const setNodeValues = (data) => {
-        dispatch(civilActions.setNodeValues(data))
+    const setNodeValues = (data,addChild) => {
+        console.log("EDIT", addChild)
+        if(addChild) {
+            console.log("Path ", "," + selNode.path + "," + selNode.id + ",")
+            civilActions.addChildNode(data, "," + selNode.path + "," + selNode.id + ",").then(res=> {
+                selNode.children = res
+                setSelNode(res)
+                toast.current.show({severity: 'success', summary: "Node added successfully", life: 3000});
+                setShowEntries(false)
+            })
+           // dispatch(civilActions.addChildNode(data))
+        } else {
+            dispatch(civilActions.setNodeValues(data))
+        }
     }
     const onSelect = (event) => {
-
 
 
     }
@@ -138,7 +150,16 @@ const CivilPage = () => {
         }
     }
 
+    const addChildren = (node) => {
+        console.log("Sel node", node)
+        setSelNode(node)
+        setValues({"newChild": true })
+        setShowEntries(true)
+        setSelectedNodeId(node.id)
+    }
+
     function showStatusDialog(node) {
+
         setSelNode(node)
         setShowAddStatus(true);
     }
@@ -158,11 +179,21 @@ const CivilPage = () => {
                             onClick={(e) => {
                                 /*setSelNode(node);
                                 op.current.toggle(e);*/
-                                showAddValues(node)
+                                addChildren(node)
                                 e.stopPropagation();
                             }}/>
-                    {node.path !== "1"?
+                    {node.path !== "1" ?
                         <React.Fragment>
+                            <Button icon="pi pi-file-edit" className="p-button-rounded p-button-danger p-button-text"
+                                    aria-label="Add"
+                                    tooltip="Edit values"
+                                    onClick={(e) => {
+                                        /*setSelNode(node);
+                                        op.current.toggle(e);*/
+                                        showAddValues(node)
+
+                                        e.stopPropagation();
+                                    }}/>
                             <Button icon="pi pi-chart-bar" className="p-button-rounded p-button-danger p-button-text"
                                     aria-label="Add"
                                     tooltip="View Status"
@@ -219,41 +250,48 @@ const CivilPage = () => {
         }
     }
 
+    const saveStatus = (data) => {
+        dispatch(civilActions.saveProgress(data))
+        setShowAddStatus(false)
+    }
 
     return (
         <div className="card">
             <Toast ref={toast}/>
             <ContextMenu model={menu} ref={cm} onHide={() => setSelectedNodeKey(null)}/>
             <Dialog header="Work Status" visible={showStatus} maximizable breakpoints={{'960px': '75vw'}} style={{width: '50vw'}} onHide={() => setShowStatus(false)}>
-                <StatusChart  data={statusData} node={selNode}/>
+                <StatusChart data={statusData} node={selNode}/>
             </Dialog>
-            <Dialog header="Header" visible={showEntries} maximizable breakpoints={{'960px': '75vw'}} style={{width: '50vw'}} onHide={() => setShowEntries(false)}>
+            <Dialog header={values['newChild']? "Add new child" : "Edit values"} visible={showEntries} maximizable breakpoints={{'960px': '75vw'}} style={{width: '50vw'}} onHide={() => setShowEntries(false)}>
                 <NewCivil fields={fields} nodeId={selectedNodeId} initialValues={values} formSubmit={setNodeValues}/>
             </Dialog>
-            <Dialog header="Add Status" visible={showAddStatus}  breakpoints={{'960px': '75vw'}} style={{width: '50vw'}} onHide={() => setShowAddStatus(false)}>
-                <StatusForm  nodeData={selNode} />
-            </Dialog>
+
             <AddNode op={op} nodeName={selNode}/>
             {loading ?
                 <div className="p-d-flex p-jc-center">
                     <ProgressSpinner style={{width: '150px', height: '150px', margin: '0 auto'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>
                 </div> :
                 <React.Fragment>
+
                     <TabView>
                         <TabPanel header="Tender">
                             <ScrollPanel style={{width: '100%', height: '80vh'}}>
-
-                                <Tree id="tr" style={{border: 'none'}} value={tenderTree} selectionMode="single" loading={loadingn} onExpand={loadOnExpand}
+                                <Tree id="tr" expandedKeys={expandedKeys}  style={{border: 'none'}} value={tenderTree} selectionMode="single" loading={loadingn} onExpand={loadOnExpand}
                                       nodeTemplate={nodeTemplate}
+                                      onToggle={e => setExpandedKeys(e.value)}
                                       onSelect={onSelect}
 
                                 />
+
                             </ScrollPanel>
                         </TabPanel>
                         <TabPanel header="Non-Tender">
                             <ScrollPanel style={{width: '100%', height: '80vh'}}>
 
-                                <Tree id="tr" style={{border: 'none'}} value={nonTenderTree} selectionMode="single" loading={loadingn} onExpand={loadOnExpand}
+                                <Tree id="tr" style={{border: 'none'}} value={nonTenderTree} selectionMode="single" loading={loadingn}
+                                      onExpand={loadOnExpand}
+                                      expandedKeys={expandedKeys1}
+                                      onToggle={e => setExpandedKeys1(e.value)}
                                       nodeTemplate={nodeTemplate}
                                       onSelect={onSelect}
 
@@ -263,7 +301,9 @@ const CivilPage = () => {
                     </TabView>
                 </React.Fragment>
             }
-
+            <Dialog header="Add Status" modal visible={showAddStatus} breakpoints={{'960px': '75vw'}} style={{width: '50vw'}} onHide={() => setShowAddStatus(false)}>
+                <StatusForm nodeData={selNode} formSubmit={saveStatus}/>
+            </Dialog>
         </div>
     );
 };

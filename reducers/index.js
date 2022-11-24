@@ -6,6 +6,7 @@ import civilReducers from "./civilReducers";
 export default combineReducers({
 
   auth: authReducers,
-    civil: civilReducers
+    civil: civilReducers,
+
 
 });

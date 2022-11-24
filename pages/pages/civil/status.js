@@ -1,53 +1,21 @@
 import {Field, Form} from 'react-final-form';
-import {Panel} from "primereact/panel";
 import {Button} from "primereact/button";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useState} from "react";
 import {Calendar} from "primereact/calendar";
-import {InputNumber} from "primereact/inputnumber";
-import {Knob} from "primereact/knob";
-import {useDispatch, useSelector} from "react-redux";
 import civilActions from "../../../actions/civilActions";
-import {Chart} from "primereact/chart";
 import {Slider} from "primereact/slider";
 import {Badge} from "primereact/badge";
 
 const StatusForm = ({initialValues, formSubmit: formSubmit, nodeData}) => {
-    const dispatch = useDispatch();
     const onSubmit = (data, form) => {
-
+        data['date']=civilActions.dateToYMD(data['date'])
+        data['nodeId'] = nodeData.id
         console.log(JSON.stringify(data))
+        formSubmit(data)
+        form.restart();
     }
-    const [value2, setValue2] = useState(0);
+    const [percentage, setPercentage] = useState(0);
 
-    let basicOptions = {
-        maintainAspectRatio: false,
-        aspectRatio: .8,
-        plugins: {
-            legend: {
-                labels: {
-                    color: '#495057'
-                }
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: '#495057'
-                },
-                grid: {
-                    color: '#ebedef'
-                }
-            },
-            y: {
-                ticks: {
-                    color: '#495057'
-                },
-                grid: {
-                    color: '#ebedef'
-                }
-            }
-        }
-    };
     return (
         <div className="grid">
             <div className="col-12">
@@ -73,12 +41,12 @@ const StatusForm = ({initialValues, formSubmit: formSubmit, nodeData}) => {
                                 <br/><br/>
                                 <Field name="percentage" render={({input, meta}) => (
 
-                                    <Slider id="percentage" value={value2} min={0} max={100} step={10}
-                                          {...input}
-                                          onChange={e => {
-                                              setValue2(e.value)
-                                           input.onChange(e.value)
-                                    }} />
+                                    <Slider id="percentage" value={percentage} min={0} max={100}
+                                            {...input}
+                                            onChange={e => {
+                                                setPercentage(e.value)
+                                                input.onChange(e.value)
+                                            }} />
 
                                 )}/>
 
@@ -86,7 +54,7 @@ const StatusForm = ({initialValues, formSubmit: formSubmit, nodeData}) => {
                             </div>
                             <div className="field col-2 md:col-4">
                                 <br/><br/>
-                                <Badge value={`${value2}%`} className="mr-2" severity="warning"></Badge>
+                                <Badge value={`${percentage}%`} className="mr-2" severity="warning"></Badge>
                             </div>
                         </div>
 

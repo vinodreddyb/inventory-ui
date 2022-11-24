@@ -68,6 +68,31 @@ export function setNodeValues(data){
         }
     };
 }
+export function addChildNode(data,path){
+    const url = `${API_ENDPOINT}/civil/node/${path}`
+    try {
+        return httpRequest({method:'post',url:url,data:data})
+            .then((response) => {
+                const data = response.data.body
+                if(data){
+                    return data.map((n) => {
+                        return {
+                            ...n,
+                            key: n.id,
+                            label: n.name,
+                            leaf: false,
+                            path: n.path.slice(1, -1),
+                            startDate: new Date(n.startDate),
+                            endDate: new Date(n.endDate)
+
+                        }
+                    })
+                }
+            })
+    }catch (error) {
+        console.log("Error while adding subtree ", error)
+    }
+}
 export function getStatusGraph(nodeId){
     const url = `${API_ENDPOINT}/civil/status/${nodeId}?graph=true`
     try {
@@ -77,13 +102,33 @@ export function getStatusGraph(nodeId){
         console.log("Error while fetching subtree ", error)
     }
 }
+export function saveProgress(data){
+    const url = `${API_ENDPOINT}/civil/status`
+    return async dispatch => {
+        try {
+            dispatch({ type: CIVIL.LOADING })
+            httpRequest({method:'post',url: url, data:data}).then((response) =>
+                dispatch({type: CIVIL.SAVE_STATUS,payload: response.data}))
+        }catch (error) {
+            dispatch({type: CIVIL.GET_ALL_ERROR,payload: error.message })
+        }
+    };
+}
+export function dateToYMD(date) {
+    const d = date.getDate();
+    const m = date.getMonth() + 1; //Month from 0 to 11
+    const y = date.getFullYear();
+    return '' + y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d);
+}
 const civilActions = {
     getTopLevel: getTopLevel,
     getFields: getFields,
     getSubTree: getSubTree,
     setNodeValues: setNodeValues,
-    getStatusGraph: getStatusGraph
-
+    addChildNode:addChildNode,
+    getStatusGraph: getStatusGraph,
+    dateToYMD:dateToYMD,
+    saveProgress: saveProgress
 }
 
 export default civilActions;
