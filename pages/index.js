@@ -125,17 +125,11 @@ const Dashboard = () => {
     return (
         <div className="grid">
 
-
-
-
             <div className="col-12">
                 <div className="card">
-                    <h5>Scurve Overview</h5>
+                    <h5>S-Curve Overview</h5>
                     <Chart  data={scurveData} options={lineOptions} />
                 </div>
-
-
-
             </div>
         </div>
     );
