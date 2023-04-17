@@ -114,6 +114,19 @@ export function saveProgress(data){
         }
     };
 }
+export function getScurveGraph() {
+    const url = `${API_ENDPOINT}/contract/scurve`
+    console.log("UT", url)
+    return async dispatch => {
+        try {
+            dispatch({ type: CIVIL.LOADING })
+            httpRequest({url}).then((response) =>
+                dispatch({type: CIVIL.GET_SCURVE,payload: response.data}))
+        }catch (error) {
+            dispatch({type: CIVIL.GET_SCURVE_ERROR,payload: error.message })
+        }
+    };
+}
 export function dateToYMD(date) {
     const d = date.getDate();
     const m = date.getMonth() + 1; //Month from 0 to 11
@@ -128,7 +141,8 @@ const civilActions = {
     addChildNode:addChildNode,
     getStatusGraph: getStatusGraph,
     dateToYMD:dateToYMD,
-    saveProgress: saveProgress
+    saveProgress: saveProgress,
+    getScurveGraph: getScurveGraph
 }
 
 export default civilActions;

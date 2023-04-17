@@ -11,6 +11,7 @@ const initialState = {
     status: {},
     tenderTree:[],
     nonTenderTree:[],
+    scurveData:{}
   };
 
 function getCivilTree(action,civilTree) {
@@ -76,6 +77,7 @@ const civilReducers = (state = initialState, action)=>{
               }
           }
           case CIVIL.GET_SUB_TREE: {
+
               return {
                   ...state,
                   subTree: action.payload.body.map((n) => {
@@ -128,6 +130,56 @@ const civilReducers = (state = initialState, action)=>{
                   error: null
               }
           }
+          case CIVIL.GET_SCURVE : {
+            console.log("Test")
+              var n = action.payload.body
+            return {
+                ...state,
+                scurveData:  {
+                        labels: n.labels,
+                        datasets: [
+                            {
+                                type: 'bar',
+                                label: 'SCH.MONTHLY',
+                                data: n.schProgress,
+                                fill: false,
+                                backgroundColor: '#2f4860',
+                                borderColor: '#2f4860',
+                                tension: 0.4
+                            },
+                            {
+                                type: 'bar',
+                                label: 'Monthly Actual',
+                                data: n.monthlyActual,
+                                fill: false,
+                                backgroundColor: '#00bb7e',
+                                borderColor: '#00bb7e',
+                                tension: 0.4
+                            },
+                            {
+                                type: 'line',
+                                label: 'SCH Cumulative',
+                                data: n.schCumulative,
+                                fill: false,
+                                backgroundColor: '#8A2BE2',
+                                borderColor: '#8A2BE2',
+                                tension: 0.4
+                            },
+                            {
+                                type: 'line',
+                                label: 'Cumulative Actual',
+                                data: n.actualCumulative,
+                                backgroundColor: '#A52A2A',
+                                borderColor: '#A52A2A',
+                                tension: 0.4
+                            }
+                        ]
+
+                },
+                loading: false,
+                error: null
+            }
+        }
 
           default: return state
       }

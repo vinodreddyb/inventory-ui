@@ -34,6 +34,7 @@ const DEFAULT_SERVER_CONFIG = {
 
 const httpRequest = async({method="get", url="/", headers=DEFAULT_SERVER_CONFIG, data = null })=>{
     try {
+
         return axios[method](url, data, headers)
       } catch(error) {
         return error
