@@ -48,6 +48,11 @@ const AppMenu = () => {
                     icon: 'pi pi-fw pi-globe',
                     to: '/pages/civil'
                 },
+                {
+                    label: 'Contract',
+                    icon: 'pi pi-fw pi-globe',
+                    to: '/pages/contract'
+                },
                 /*{
                     label: 'Auth',
                     icon: 'pi pi-fw pi-user',

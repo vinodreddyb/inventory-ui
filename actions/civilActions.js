@@ -127,6 +127,19 @@ export function getScurveGraph() {
         }
     };
 }
+export function getContractSchedule() {
+    const url = `${API_ENDPOINT}/contract/schedule`
+    return async dispatch => {
+        try {
+            dispatch({ type: CIVIL.LOADING })
+            httpRequest({url}).then((response) =>
+                dispatch({type: CIVIL.GET_CONTRACT_SCHEDULE,payload: response.data}))
+        }catch (error) {
+            dispatch({type: CIVIL.GET_CONTRACT_SCHEDULE_ERROR,payload: error.message })
+        }
+    };
+}
+
 export function dateToYMD(date) {
     const d = date.getDate();
     const m = date.getMonth() + 1; //Month from 0 to 11
@@ -142,7 +155,8 @@ const civilActions = {
     getStatusGraph: getStatusGraph,
     dateToYMD:dateToYMD,
     saveProgress: saveProgress,
-    getScurveGraph: getScurveGraph
+    getScurveGraph: getScurveGraph,
+    getContractSchedule:getContractSchedule
 }
 
 export default civilActions;

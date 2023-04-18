@@ -103,7 +103,7 @@ const EmptyPage = () => {
                     <p>Use this page to start from scratch and place your custom content.</p>
                     <div className="timeline-demo">
 
-                        <Timeline className="customized-timeline"   value={events1} marker={customizedMarker} content={(item) => <small className="p-text-secondary">{item.date}</small>} layout="horizontal"  />
+
 
                       </div>
                     <Chart type="bar" data={basicData} options={basicOptions} />

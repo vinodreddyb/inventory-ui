@@ -11,7 +11,8 @@ const initialState = {
     status: {},
     tenderTree:[],
     nonTenderTree:[],
-    scurveData:{}
+    scurveData:{},
+    progressData:{}
   };
 
 function getCivilTree(action,civilTree) {
@@ -54,8 +55,93 @@ function groupByKey(array, key) {
             return Object.assign(hash, { [obj[key]]:( hash[obj[key]] || [] ).concat(obj)})
         }, {})
 }
+function getScurveData(n) {
+    return {
+        labels: n.labels,
+        datasets: [
+            {
+                type: 'bar',
+                label: 'SCH.MONTHLY',
+                data: n.schProgress,
+                fill: false,
+                backgroundColor: '#2f4860',
+                borderColor: '#2f4860',
+                tension: 0.4
+            },
+            {
+                type: 'bar',
+                label: 'Monthly Actual',
+                data: n.monthlyActual,
+                fill: false,
+                backgroundColor: '#00bb7e',
+                borderColor: '#00bb7e',
+                tension: 0.4
+            },
+            {
+                type: 'line',
+                label: 'SCH Cumulative',
+                data: n.schCumulative,
+                fill: false,
+                backgroundColor: '#8A2BE2',
+                borderColor: '#8A2BE2',
+                tension: 0.4
+            },
+            {
+                type: 'line',
+                label: 'Cumulative Actual',
+                data: n.actualCumulative,
+                backgroundColor: '#A52A2A',
+                borderColor: '#A52A2A',
+                tension: 0.4
+            }
+        ]
+
+    };
+}
+
+function getContactProgress(response) {
+
+    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUNE", "JULY", "AUG", "SEPT", "OCT", "NOV", "DEC"];
+    const cols = response.SchColumns;
+    const scolumns = [];
+    const columns = [];
+    const yearColumns = []
+    columns.push({field: "Activity", header: "Activity", frozen: true})
+    response.Columns.forEach(function(obj) {
+        columns.push({field: obj, header: obj, frozen: false})
+    })
+
+    const sColSize = {}
+    for (const key in cols) {
+        if(yearColumns.indexOf(key) === -1) {
+            yearColumns.push(key)
+        }
+        const month = cols[key];
+        sColSize[key] = month.length
+        months.forEach(function(obj) {
+            if(month.indexOf(obj) !== -1) {
+                scolumns.push({field: obj +"-"+key, header: obj,frozen: false},)
+            }
+        })
+    }
+
+    const sdata = {
+        "scolumns" : scolumns,
+        "cols" : columns,
+        "years" : yearColumns,
+        "data": response.Data,
+        "ycolSize": sColSize
+    }
+
+
+
+    return sdata
+
+}
+
 const civilReducers = (state = initialState, action)=>{
-      switch(action.type){
+
+    switch(action.type){
           case 'LOADING' : {
               return {
                   ...state,
@@ -135,51 +221,23 @@ const civilReducers = (state = initialState, action)=>{
               var n = action.payload.body
             return {
                 ...state,
-                scurveData:  {
-                        labels: n.labels,
-                        datasets: [
-                            {
-                                type: 'bar',
-                                label: 'SCH.MONTHLY',
-                                data: n.schProgress,
-                                fill: false,
-                                backgroundColor: '#2f4860',
-                                borderColor: '#2f4860',
-                                tension: 0.4
-                            },
-                            {
-                                type: 'bar',
-                                label: 'Monthly Actual',
-                                data: n.monthlyActual,
-                                fill: false,
-                                backgroundColor: '#00bb7e',
-                                borderColor: '#00bb7e',
-                                tension: 0.4
-                            },
-                            {
-                                type: 'line',
-                                label: 'SCH Cumulative',
-                                data: n.schCumulative,
-                                fill: false,
-                                backgroundColor: '#8A2BE2',
-                                borderColor: '#8A2BE2',
-                                tension: 0.4
-                            },
-                            {
-                                type: 'line',
-                                label: 'Cumulative Actual',
-                                data: n.actualCumulative,
-                                backgroundColor: '#A52A2A',
-                                borderColor: '#A52A2A',
-                                tension: 0.4
-                            }
-                        ]
-
-                },
+                scurveData:  getScurveData(n),
                 loading: false,
                 error: null
             }
         }
+          case CIVIL.GET_CONTRACT_SCHEDULE : {
+              var response = action.payload.body
+              var res = getContactProgress(response);
+
+              return {
+                  ...state,
+                  progressData: res,
+                  message: 'Work status successfully',
+                  loading: false,
+                  error: null
+              }
+          }
 
           default: return state
       }
