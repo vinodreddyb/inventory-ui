@@ -89,11 +89,7 @@ const AppMenu = () => {
                     icon: 'pi pi-fw pi-exclamation-circle',
                     to: '/pages/notfound'
                 },*/
-                {
-                    label: 'Empty',
-                    icon: 'pi pi-fw pi-circle-off',
-                    to: '/pages/empty'
-                }
+
             ]
         },
         /*{
