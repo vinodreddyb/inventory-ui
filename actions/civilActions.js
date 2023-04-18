@@ -139,7 +139,18 @@ export function getContractSchedule() {
         }
     };
 }
-
+export function getContractProgresPie() {
+    const url = `${API_ENDPOINT}/contract/piechart`
+    return async dispatch => {
+        try {
+            dispatch({ type: CIVIL.LOADING })
+            httpRequest({url}).then((response) =>
+                dispatch({type: CIVIL.GET_CONTRACT_PIE,payload: response.data}))
+        }catch (error) {
+            dispatch({type: CIVIL.GET_CONTRACT_PIE_ERROR,payload: error.message })
+        }
+    };
+}
 export function dateToYMD(date) {
     const d = date.getDate();
     const m = date.getMonth() + 1; //Month from 0 to 11
@@ -156,7 +167,8 @@ const civilActions = {
     dateToYMD:dateToYMD,
     saveProgress: saveProgress,
     getScurveGraph: getScurveGraph,
-    getContractSchedule:getContractSchedule
+    getContractSchedule:getContractSchedule,
+    getContractProgresPie:getContractProgresPie
 }
 
 export default civilActions;

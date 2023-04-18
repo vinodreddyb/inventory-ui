@@ -40,7 +40,8 @@ const Dashboard = () => {
     const [lineOptions, setLineOptions] = useState(null);
     const { layoutConfig } = useContext(LayoutContext);
     const contextPath = getConfig().publicRuntimeConfig.contextPath;
-
+    const [chartData, setChartData] = useState({});
+    const [chartOptions, setChartOptions] = useState({});
     const applyLightTheme = () => {
         const lineOptions = {
             plugins: {
@@ -107,20 +108,62 @@ const Dashboard = () => {
 
 
     const dispatch = useDispatch();
-    const {scurveData} = useSelector(state => state.civil)
+    const {scurveData,pieData} = useSelector(state => state.civil)
     const mounted = useRef(false);
+
     useEffect(() => {
+        const documentStyle = getComputedStyle(document.documentElement);
         if (!mounted.current) {
             // do componentDidMount logic
             dispatch(civilActions.getScurveGraph());
-
+            dispatch(civilActions.getContractProgresPie());
             mounted.current = true;
 
         }
 
+    }, [dispatch,scurveData,pieData])
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 
+    useEffect(() => {
+        let colors;
+        colors=[];
+        if(pieData.data) {
+            for(let i=0;i<pieData.data.length;i++){
+                colors.push('#'+Math.floor(Math.random()*16777215).toString(16));
+            }
+        }
 
-    }, [dispatch,scurveData])
+        const documentStyle = getComputedStyle(document.documentElement);
+        const data = {
+            labels: pieData.labels,
+            datasets: [
+                {
+                    data: pieData.data,
+                    backgroundColor: colors,
+                    hoverBackgroundColor: colors
+                }
+            ]
+        }
+        const options = {
+            plugins: {
+                legend: {
+                    labels: {
+                        usePointStyle: true
+                    }
+                }
+            }
+        };
+
+        setChartData(data);
+        setChartOptions(options);
+    }, [dispatch,pieData]);
 
     return (
         <div className="grid">
@@ -129,6 +172,12 @@ const Dashboard = () => {
                 <div className="card">
                     <h5>S-Curve Overview</h5>
                     <Chart  data={scurveData} options={lineOptions} />
+                </div>
+            </div>
+            <div className="col-12">
+                <div className="card">
+                    <h5>Activity Weightage </h5>
+                    <Chart  type="pie" data={chartData} options={chartOptions} height={"40%"}  width={"50%"} />
                 </div>
             </div>
         </div>

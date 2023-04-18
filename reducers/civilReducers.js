@@ -5,19 +5,20 @@ const initialState = {
     subTree: [],
     fields: [],
     error: null,
-    loading:false,
+    loading: false,
     message: '',
     updateNodeValues: false,
     status: {},
-    tenderTree:[],
-    nonTenderTree:[],
-    scurveData:{},
-    progressData:{}
-  };
+    tenderTree: [],
+    nonTenderTree: [],
+    scurveData: {},
+    progressData: {},
+    pieData: []
+};
 
-function getCivilTree(action,civilTree) {
+function getCivilTree(action, civilTree) {
 
-    if(!action.payload.body) return civilTree;
+    if (!action.payload.body) return civilTree;
 
     const trr = action.payload.body.map((n) => {
         return {
@@ -25,15 +26,15 @@ function getCivilTree(action,civilTree) {
             key: n.id,
             label: n.name,
             leaf: false,
-            path: n.path.slice(1,-1),
+            path: n.path.slice(1, -1),
             startDate: new Date(n.startDate),
             endDate: new Date(n.endDate)
         }
     });
 
-    if(civilTree.length > 0) {
+    if (civilTree.length > 0) {
         const ss = trr[0].path.split(",");
-        const ss1 = ss[ss.length-1]
+        const ss1 = ss[ss.length - 1]
         return civilTree.map(pa => {
             //   console.log("Matched " + pa.id + ":" +ss1,pa.id ===ss1)
 
@@ -48,13 +49,15 @@ function getCivilTree(action,civilTree) {
 
 
 }
+
 function groupByKey(array, key) {
     return array
         .reduce((hash, obj) => {
-            if(obj[key] === undefined) return hash;
-            return Object.assign(hash, { [obj[key]]:( hash[obj[key]] || [] ).concat(obj)})
+            if (obj[key] === undefined) return hash;
+            return Object.assign(hash, {[obj[key]]: (hash[obj[key]] || []).concat(obj)})
         }, {})
 }
+
 function getScurveData(n) {
     return {
         labels: n.labels,
@@ -107,139 +110,147 @@ function getContactProgress(response) {
     const columns = [];
     const yearColumns = []
     columns.push({field: "Activity", header: "Activity", frozen: true})
-    response.Columns.forEach(function(obj) {
+    response.Columns.forEach(function (obj) {
         columns.push({field: obj, header: obj, frozen: false})
     })
 
     const sColSize = {}
     for (const key in cols) {
-        if(yearColumns.indexOf(key) === -1) {
+        if (yearColumns.indexOf(key) === -1) {
             yearColumns.push(key)
         }
         const month = cols[key];
         sColSize[key] = month.length
-        months.forEach(function(obj) {
-            if(month.indexOf(obj) !== -1) {
-                scolumns.push({field: obj +"-"+key, header: obj,frozen: false},)
+        months.forEach(function (obj) {
+            if (month.indexOf(obj) !== -1) {
+                scolumns.push({field: obj + "-" + key, header: obj, frozen: false},)
             }
         })
     }
 
     const sdata = {
-        "scolumns" : scolumns,
-        "cols" : columns,
-        "years" : yearColumns,
+        "scolumns": scolumns,
+        "cols": columns,
+        "years": yearColumns,
         "data": response.Data,
         "ycolSize": sColSize
     }
-
 
 
     return sdata
 
 }
 
-const civilReducers = (state = initialState, action)=>{
+const civilReducers = (state = initialState, action) => {
 
-    switch(action.type){
-          case 'LOADING' : {
-              return {
-                  ...state,
-
-                  loading:true,
-                  error:null,
-                  message: null
-              }
-          }
-          case CIVIL.GET_ALL_TOP_TREE: {
-              let ct= getCivilTree(action, state.civilTree)
-              let gr = groupByKey(ct,"type");
-              return {
-                  ...state,
-                  civilTree: getCivilTree(action, state.civilTree),
-                  tenderTree: gr["TENDER"],
-                  nonTenderTree: gr["NON-TENDER"],
-                  error: null
-              }
-          }
-          case CIVIL.GET_SUB_TREE: {
-
-              return {
-                  ...state,
-                  subTree: action.payload.body.map((n) => {
-                      return {
-                          key: n.id,
-                          label: n.name,
-                          leaf: false,
-                          path: n.path.slice(1,-1),
-                          id: n.id,
-                          supply: n.supply,
-                          install: n.install,
-                          unit: n.unit,
-                          quantity: n.quantity
-                      }
-                  }),
-                  error: null
-              }
-          }
-          case CIVIL.GET_FIELDS: {
-              return {
-                  ...state,
-                  fields: action.payload.body,
-                  loading: false,
-                  error: null
-              }
-          }
-          case CIVIL.UPDATE_VALUES: {
-              return {
-                  ...state,
-                  message: 'Update Successfully',
-                  updateNodeValues: true,
-                  loading: false,
-                  error: null
-              }
-          }
-          case CIVIL.GET_STATUS : {
-             return {
-                 ...state,
-                 status: action.payload.body,
-                 loading: false,
-                 error: null
-             }
-
-          }
-          case CIVIL.SAVE_STATUS : {
-              return {
-                  ...state,
-                  message: 'Work status successfully',
-                  loading: false,
-                  error: null
-              }
-          }
-          case CIVIL.GET_SCURVE : {
-            console.log("Test")
-              var n = action.payload.body
+    switch (action.type) {
+        case 'LOADING' : {
             return {
                 ...state,
-                scurveData:  getScurveData(n),
+
+                loading: true,
+                error: null,
+                message: null
+            }
+        }
+        case CIVIL.GET_ALL_TOP_TREE: {
+            let ct = getCivilTree(action, state.civilTree)
+            let gr = groupByKey(ct, "type");
+            return {
+                ...state,
+                civilTree: getCivilTree(action, state.civilTree),
+                tenderTree: gr["TENDER"],
+                nonTenderTree: gr["NON-TENDER"],
+                error: null
+            }
+        }
+        case CIVIL.GET_SUB_TREE: {
+
+            return {
+                ...state,
+                subTree: action.payload.body.map((n) => {
+                    return {
+                        key: n.id,
+                        label: n.name,
+                        leaf: false,
+                        path: n.path.slice(1, -1),
+                        id: n.id,
+                        supply: n.supply,
+                        install: n.install,
+                        unit: n.unit,
+                        quantity: n.quantity
+                    }
+                }),
+                error: null
+            }
+        }
+        case CIVIL.GET_FIELDS: {
+            return {
+                ...state,
+                fields: action.payload.body,
                 loading: false,
                 error: null
             }
         }
-          case CIVIL.GET_CONTRACT_SCHEDULE : {
-              var response = action.payload.body
-              var res = getContactProgress(response);
+        case CIVIL.UPDATE_VALUES: {
+            return {
+                ...state,
+                message: 'Update Successfully',
+                updateNodeValues: true,
+                loading: false,
+                error: null
+            }
+        }
+        case CIVIL.GET_STATUS : {
+            return {
+                ...state,
+                status: action.payload.body,
+                loading: false,
+                error: null
+            }
 
-              return {
-                  ...state,
-                  progressData: res,
-                  message: 'Work status successfully',
-                  loading: false,
-                  error: null
-              }
-          }
+        }
+        case CIVIL.SAVE_STATUS : {
+            return {
+                ...state,
+                message: 'Work status successfully',
+                loading: false,
+                error: null
+            }
+        }
+        case CIVIL.GET_SCURVE : {
+            console.log("Test")
+            var n = action.payload.body
+            return {
+                ...state,
+                scurveData: getScurveData(n),
+                loading: false,
+                error: null
+            }
+        }
+        case CIVIL.GET_CONTRACT_SCHEDULE : {
+            var response = action.payload.body
+            var res = getContactProgress(response);
 
-          default: return state
-      }
-  }
-  export default civilReducers
+            return {
+                ...state,
+                progressData: res,
+                message: 'Work status successfully',
+                loading: false,
+                error: null
+            }
+        }
+        case CIVIL.GET_CONTRACT_PIE : {
+
+            return {
+                ...state,
+                pieData: action.payload.body,
+                loading: false,
+                error: null
+            }
+        }
+        default:
+            return state
+    }
+}
+export default civilReducers
