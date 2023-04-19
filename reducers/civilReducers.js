@@ -1,4 +1,6 @@
 import {CIVIL} from '../actionTypes'
+import {Column} from "primereact/column";
+import React from "react";
 
 const initialState = {
     civilTree: [],
@@ -109,6 +111,7 @@ function getContactProgress(response) {
     const scolumns = [];
     const columns = [];
     const yearColumns = []
+    columns.push({field:"",header: " ",template:"actionBodyTemplate"})
     columns.push({field: "Activity", header: "Activity", frozen: true})
     response.Columns.forEach(function (obj) {
         columns.push({field: obj, header: obj, frozen: false})
