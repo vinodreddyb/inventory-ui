@@ -11,6 +11,7 @@ import { Row } from 'primereact/row';
 import {useDispatch, useSelector, useStore} from "react-redux";
 import civilActions, {getContractSchedule} from "../../../actions/civilActions";
 import {ProgressSpinner} from "primereact/progressspinner";
+import css from 'styled-jsx/css';
 const ContractProgress = () => {
     const dispatch = useDispatch();
     const mounted = useRef(false);
@@ -21,6 +22,13 @@ const ContractProgress = () => {
             mounted.current = true;
         }
     },[dispatch, progressData,loading])
+    const {className, styles} = css.resolve`
+        .p-datatable > :global(.p-datatable-thead) {
+            background-color: #54b5a6;
+            color: #ffffff;
+        }
+    `;
+
 
     const cols = progressData.cols
     const ycols = progressData.years
@@ -59,16 +67,21 @@ const ContractProgress = () => {
     };
 
 
+
     console.log("SD", JSON.stringify(progressData))
     return (
+
         <div className="grid">
+
             <div className="col-12">
                 {loading ?
                     <div className="p-d-flex p-jc-center">
                         <ProgressSpinner style={{width: '150px', height: '150px', margin: '0 auto'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"/>
                     </div> :
                  <div className="card">
+                     <style>{styles}</style>
                     <DataTable value={progressData.data}
+                               className={className}
                                headerColumnGroup={headerGroup}
                                size = "small"
                                stripedRows

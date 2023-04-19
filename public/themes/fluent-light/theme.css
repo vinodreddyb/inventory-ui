@@ -2614,9 +2614,9 @@
   border-radius: 0;
 }
 .p-datatable .p-datatable-header {
-  background: #ffffff;
+  background: #54b5a6;
   color: #323130;
-  border: 1px solid #f3f2f1;
+  border: 10px solid #f3f2f1;
   border-width: 1px 0 1px 0;
   padding: 0.75rem 0.75rem;
   font-weight: 600;
@@ -2632,11 +2632,11 @@
 .p-datatable .p-datatable-thead > tr > th {
   text-align: left;
   padding: 0.75rem 0.75rem;
-  border: 1px solid #f3f2f1;
+  border: 1px solid #4F505C;
   border-width: 0 0 1px 0;
   font-weight: 600;
-  color: #323130;
-  background: #ffffff;
+  color: #ffffff;
+  background: #2e608b;
   transition: box-shadow 0.2s;
 }
 .p-datatable .p-datatable-tfoot > tr > td {
@@ -2693,7 +2693,7 @@
 }
 .p-datatable .p-datatable-tbody > tr > td {
   text-align: left;
-  border: 1px solid #f3f2f1;
+  border: 1px solid #4F505C;
   border-width: 0 0 1px 0;
   padding: 0.75rem 0.75rem;
 }

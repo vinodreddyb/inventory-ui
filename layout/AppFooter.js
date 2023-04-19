@@ -8,9 +8,9 @@ const AppFooter = () => {
     //logo-${layoutConfig.colorScheme === 'light' ? 'dark' : 'white'}.svg`
     return (
         <div className="layout-footer">
-            <img src={`${contextPath}/layout/images/tabit1.png`} alt="Logo" height="20" className="mr-2" />
-            by Tabit
-            <span className="font-medium ml-2">Inventory</span>
+            <img src={`${contextPath}/layout/images/tabit.png`} alt="Logo" height="60" className="mr-2" />
+            By
+            <span className="font-medium ml-2">TABIT Solutions</span>
         </div>
     );
 };

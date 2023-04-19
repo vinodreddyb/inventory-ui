@@ -1,17 +1,9 @@
 import getConfig from 'next/config';
-import {Button} from 'primereact/button';
 import {Chart} from 'primereact/chart';
-import {Column} from 'primereact/column';
-import {DataTable} from 'primereact/datatable';
-import {Menu} from 'primereact/menu';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {ProductService} from '../demo/service/ProductService';
 import {LayoutContext} from '../layout/context/layoutcontext';
-import Link from 'next/link';
 import civilActions from '../actions/civilActions';
-import { useDispatch, useSelector } from 'react-redux';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-
+import {useDispatch, useSelector} from 'react-redux';
 
 
 const lineData = {
@@ -172,6 +164,7 @@ const Dashboard = () => {
     }, [dispatch,pieData]);
 
     return (
+        <div className="card">
         <div className="grid">
 
             <div className="col-10">
@@ -181,9 +174,9 @@ const Dashboard = () => {
                 </div>
                 </div>
 
-              
 
-<div>   
+
+<div>
 
 </div>
 
@@ -211,10 +204,10 @@ const Dashboard = () => {
             </div>
 
 
-            
+
 
         </div>
-
+        </div>
 
     );
 };
@@ -241,8 +234,8 @@ const options = {
       }
     }
   };
-  
+
   // ...
-  
+
 
 export default Dashboard;
