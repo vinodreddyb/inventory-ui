@@ -23,7 +23,7 @@ const AppTopbar = forwardRef((props, ref) => {
                 <a className="layout-topbar-logo">
                     <>
                         <img src={`${contextPath}/layout/images/tabit1.png`} width="60px" height={'60px'} widt={'true'} alt="logo" />
-                        <span>INVENTORY</span>
+                        <span>IFTAS | EIL</span>
                     </>
                 </a>
             </Link>
@@ -36,22 +36,7 @@ const AppTopbar = forwardRef((props, ref) => {
                 <i className="pi pi-ellipsis-v" />
             </button>
 
-            <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
-                <button type="button" className="p-link layout-topbar-button">
-                    <i className="pi pi-calendar"></i>
-                    <span>Calendar</span>
-                </button>
-                <button type="button" className="p-link layout-topbar-button">
-                    <i className="pi pi-user"></i>
-                    <span>Profile</span>
-                </button>
-                <Link href="/documentation">
-                    <button type="button" className="p-link layout-topbar-button">
-                        <i className="pi pi-cog"></i>
-                        <span>Settings</span>
-                    </button>
-                </Link>
-            </div>
+
         </div>
     );
 });

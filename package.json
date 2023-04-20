@@ -35,7 +35,8 @@
         "react-transition-group": "^4.4.5",
         "redux": "^4.2.0",
         "redux-devtools-extension": "^2.13.9",
-        "redux-thunk": "^2.4.1"
+        "redux-thunk": "^2.4.1",
+        "styled-jsx": "^5.1.2"
     },
     "devDependencies": {
         "eslint": "8.21.0",

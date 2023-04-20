@@ -43,11 +43,11 @@ const AppMenu = () => {
                     icon: 'pi pi-fw pi-globe',
                     to: '/landing'
                 },*/
-                {
+                /*{
                     label: 'Civil',
                     icon: 'pi pi-fw pi-globe',
                     to: '/pages/civil'
-                },
+                },*/
                 {
                     label: 'Contract',
                     icon: 'pi pi-fw pi-globe',

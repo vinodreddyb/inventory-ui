@@ -1,15 +1,10 @@
 import getConfig from 'next/config';
-import {Button} from 'primereact/button';
 import {Chart} from 'primereact/chart';
-import {Column} from 'primereact/column';
-import {DataTable} from 'primereact/datatable';
-import {Menu} from 'primereact/menu';
 import React, {useContext, useEffect, useRef, useState} from 'react';
-import {ProductService} from '../demo/service/ProductService';
 import {LayoutContext} from '../layout/context/layoutcontext';
-import Link from 'next/link';
 import civilActions from '../actions/civilActions';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+
 
 const lineData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -155,7 +150,10 @@ const Dashboard = () => {
             plugins: {
                 legend: {
                     labels: {
-                        usePointStyle: true
+                        usePointStyle: true,
+                        formatter: function(value, context) {
+                            return context.dataIndex + ': ' + Math.round(value*100) + '%';
+                          }
                     }
                 }
             }
@@ -166,22 +164,78 @@ const Dashboard = () => {
     }, [dispatch,pieData]);
 
     return (
+        <div className="card">
         <div className="grid">
 
-            <div className="col-12">
+            <div className="col-10">
                 <div className="card">
                     <h5>S-Curve Overview</h5>
                     <Chart  data={scurveData} options={lineOptions} />
                 </div>
-            </div>
-            <div className="col-12">
+                </div>
+
+
+
+<div>
+
+</div>
+
+
+            <div className="col-10">
                 <div className="card">
                     <h5>Activity Weightage </h5>
                     <Chart  type="pie" data={chartData} options={chartOptions} height={"40%"}  width={"50%"} />
                 </div>
             </div>
+
+
+            <div className="col-6">
+                <div className="card">
+                    <h5> Weightage Progress</h5>
+                    <Chart type="bar" data={chartData} options={chartOptions} />
+                </div>
+            </div>
+
+            <div className="col-6">
+                <div className="card">
+                    <h5> Weightage Progress</h5>
+                    <Chart type="line" data={chartData} options={chartOptions} />
+                </div>
+            </div>
+
+
+
+
         </div>
+        </div>
+
     );
 };
+
+const options = {
+    plugins: {
+      legend: {
+        labels: {
+          usePointStyle: true
+        }
+      },
+      datalabels: {
+        formatter: (value, ctx) => {
+          let datasets = ctx.chart.data.datasets;
+          if (datasets.indexOf(ctx.dataset) === datasets.length - 1) {
+            let sum = datasets[0].data.reduce((a, b) => a + b, 0);
+            let percentage = Math.round((value / sum) * 100) + '%';
+            return percentage;
+          } else {
+            return percentage;
+          }
+        },
+        color: '#fff'
+      }
+    }
+  };
+
+  // ...
+
 
 export default Dashboard;

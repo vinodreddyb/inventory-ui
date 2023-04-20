@@ -46,8 +46,9 @@ const StatusChart = ({data,node}) => {
             <div className="col-12">
             </div>
             <div className="col-12">
-                <h5>Total Work progress</h5>
-                <ProgressBar value={Math.max.apply(null,data.datasets[0].data)}></ProgressBar>
+               {/* <h5>Total Work progress</h5>
+                {data.datasets1? <ProgressBar value={Math.max.apply(null,data.datasets1[0].data)}/>:<span/>}
+*/}
             </div>
             <div className="col-12">
                 <h5>Day wise progress</h5>

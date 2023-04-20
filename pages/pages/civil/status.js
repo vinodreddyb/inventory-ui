@@ -24,17 +24,17 @@ const StatusForm = ({initialValues, formSubmit: formSubmit, nodeData}) => {
                         <div className="formgrid grid">
                             <div className="field col-3">
                                 <label htmlFor="date">Select Date</label>
-                                <Field name="date" render={({input, meta}) => (
+                               {/* <Field name="date" render={({input, meta}) => (
 
 
                                     <Calendar id="date" name="" {...input}
-                                              minDate={nodeData.startDate}
-                                              maxDate={nodeData.endDate}
+                                              minDate={nodeData.startDate1}
+                                              maxDate={nodeData.endDate1}
                                               dateFormat="yy-mm-dd"
                                               onChange={e => {
                                                   input.onChange(e.value)
                                               }}/>
-                                )}/>
+                                )}/>*/}
                             </div>
                             <div className="field col-2 md:col-4">
                                 <label htmlFor="date">Status</label>
