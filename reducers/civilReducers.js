@@ -13,7 +13,8 @@ const initialState = {
     nonTenderTree: [],
     scurveData: {},
     progressData: {},
-    pieData: []
+    pieData: [],
+    monthVsCum: {}
 };
 
 function getCivilTree(action, civilTree) {
@@ -56,6 +57,34 @@ function groupByKey(array, key) {
             if (obj[key] === undefined) return hash;
             return Object.assign(hash, {[obj[key]]: (hash[obj[key]] || []).concat(obj)})
         }, {})
+}
+
+function getMonthVsCum(n) {
+    return {
+        labels: n.labels,
+        datasets: [
+           
+            {
+                type: 'line',
+                label: 'Monthly Actual',
+                data: n.monthlyActual,
+                fill: false,
+                backgroundColor: '#00bb7e',
+                borderColor: '#00bb7e',
+                tension: 0.4
+            },
+           
+            {
+                type: 'line',
+                label: 'Cumulative Actual',
+                data: n.actualCumulative,
+                backgroundColor: '#A52A2A',
+                borderColor: '#A52A2A',
+                tension: 0.4
+            }
+        ]
+
+    };
 }
 
 function getScurveData(n) {
@@ -141,6 +170,8 @@ function getContactProgress(response) {
 
 }
 
+
+
 const civilReducers = (state = initialState, action) => {
 
     switch (action.type) {
@@ -224,6 +255,7 @@ const civilReducers = (state = initialState, action) => {
             return {
                 ...state,
                 scurveData: getScurveData(n),
+                monthVsCum: getMonthVsCum(n),
                 loading: false,
                 error: null
             }

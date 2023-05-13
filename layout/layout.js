@@ -10,6 +10,7 @@ import AppTopbar from './AppTopbar';
 import AppConfig from './AppConfig';
 import {LayoutContext} from './context/layoutcontext';
 import PrimeReact from 'primereact/api';
+import {AuthContextProvider} from "../context/AuthContext";
 
 const Layout = (props) => {
     const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
@@ -119,7 +120,7 @@ const Layout = (props) => {
                 <meta property="og:ttl" content="604800"></meta>
                 <link rel="icon" href={`${contextPath}/favicon.ico`} type="image/x-icon"></link>
             </Head>
-
+            <AuthContextProvider>
             <div className={containerClass}>
                 <AppTopbar ref={topbarRef} />
                 <div ref={sidebarRef} className="layout-sidebar">
@@ -132,6 +133,7 @@ const Layout = (props) => {
                 <AppConfig />
 
             </div>
+            </AuthContextProvider>
         </React.Fragment>
     );
 };

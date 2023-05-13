@@ -8,7 +8,7 @@ import {DataTable} from "primereact/datatable";
 import { Column } from 'primereact/column';
 import { ColumnGroup } from 'primereact/columngroup';
 import { Row } from 'primereact/row';
-import {useDispatch, useSelector, useStore} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import civilActions, {getContractSchedule} from "../../../actions/civilActions";
 import {ProgressSpinner} from "primereact/progressspinner";
 import css from 'styled-jsx/css';
@@ -16,12 +16,15 @@ const ContractProgress = () => {
     const dispatch = useDispatch();
     const mounted = useRef(false);
     const {progressData,loading} = useSelector(state => state.civil)
+
     useEffect(() => {
         if (!mounted.current) {
             dispatch(civilActions.getContractSchedule())
             mounted.current = true;
         }
     },[dispatch, progressData,loading])
+
+
     const {className, styles} = css.resolve`
         .p-datatable > :global(.p-datatable-thead) {
             background-color: #54b5a6;

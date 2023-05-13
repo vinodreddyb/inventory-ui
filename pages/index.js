@@ -4,6 +4,8 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {LayoutContext} from '../layout/context/layoutcontext';
 import civilActions from '../actions/civilActions';
 import {useDispatch, useSelector} from 'react-redux';
+import {useAuthContext} from "../context/AuthContext";
+import {useRouter} from "next/router";
 
 
 const lineData = {
@@ -103,8 +105,13 @@ const Dashboard = () => {
 
 
     const dispatch = useDispatch();
-    const {scurveData,pieData} = useSelector(state => state.civil)
+    const {scurveData,pieData,monthVsCum} = useSelector(state => state.civil)
     const mounted = useRef(false);
+    const { user } = useAuthContext()
+    const router = useRouter()
+    useEffect(() => {
+        if (user == null) router.push("/auth/login")
+    }, [user])
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);
@@ -116,7 +123,7 @@ const Dashboard = () => {
 
         }
 
-    }, [dispatch,scurveData,pieData])
+    }, [dispatch,scurveData,pieData,monthVsCum])
     function getRandomColor() {
         var letters = '0123456789ABCDEF'.split('');
         var color = '#';
@@ -202,6 +209,14 @@ const Dashboard = () => {
                     <Chart type="line" data={chartData} options={chartOptions} />
                 </div>
             </div>
+
+
+            <div className="col-6">
+                 <div className="card">
+                         <Chart type="line" data={monthVsCum} options={chartOptions} />
+                </div>
+            </div>
+
 
 
 
