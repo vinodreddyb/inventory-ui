@@ -67,6 +67,7 @@ function getScurveData(n) {
                 label: 'SCH.MONTHLY',
                 data: n.schProgress,
                 fill: false,
+                yAxisID: 'y1',
                 backgroundColor: '#2f4860',
                 borderColor: '#2f4860',
                 tension: 0.4
@@ -76,9 +77,11 @@ function getScurveData(n) {
                 label: 'Monthly Actual',
                 data: n.monthlyActual,
                 fill: false,
+                yAxisID: 'y1',
                 backgroundColor: '#00bb7e',
                 borderColor: '#00bb7e',
-                tension: 0.4
+                tension: 0.4,
+                //data: [1,2,4,6,8,2,3,5,7,6,3,4,7,8,4]
             },
             {
                 type: 'line',
